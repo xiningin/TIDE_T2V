@@ -1,0 +1,64 @@
+run:
+  iterations: 1
+  initial_prompt_samples: 1
+  improved_prompt_samples: 1
+  videos_per_prompt: 1
+  early_stop_patience: 2
+  duration_seconds: 5
+  video_type: real-world
+  random_seed: 42
+
+mllm:
+  provider: transformers
+  model: ${QWEN_MODEL_DIR:-/path/to/Qwen3.6-27B}
+  model_path: ${QWEN_MODEL_DIR:-/path/to/Qwen3.6-27B}
+  cuda_visible_devices: "0"
+  torch_dtype: bfloat16
+  device_map: auto
+  enable_thinking: false
+  preserve_thinking: false
+  strip_thinking_output: true
+  temperature: 0.2
+  max_tokens: 1536
+  timeout_seconds: 300
+  max_retries: 0
+  api_key_required: false
+  dry_run_when_api_key_missing: false
+  video_input:
+    mode: frames
+    max_frames: 4
+    jpeg_quality: 85
+
+t2v:
+  backend: sana_diffusers
+  dry_run: false
+  checkpoint_dir: ${SANA_CKPT_DIR:-/path/to/SANA-Video_2B_480p_diffusers}
+  cuda_visible_devices: "1"
+  size: "832*480"
+  frame_num: 17
+  fps: 16.0
+  sample_steps: 10
+  sample_shift: 8.0
+  guidance_scale: 6.0
+  precision: bf16
+  motion_score: 30
+  clean_caption: false
+  use_resolution_binning: true
+  max_sequence_length: 300
+  diffusers_version: "0.39.0"
+  startup_timeout_seconds: 600
+  command_timeout_seconds: 600
+  negative_prompt: "A chaotic sequence with deformed limbs, heavy motion blur, sudden disappearance, jump cuts, jerky movements, inconsistent identities, temporal artifacts, jitter, or ghosting."
+
+selection:
+  lambda_penalty: 0.1
+  double_check_swapped_order: false
+  random_on_disagreement: false
+
+outputs:
+  root_dir: outputs/qwen36_transformers_sana_smoke
+
+skill_learning:
+  enabled: false
+  skill_dir: skills/rewrite-t2v-prompt
+  rules_file: skills/rewrite-t2v-prompt/rules.json

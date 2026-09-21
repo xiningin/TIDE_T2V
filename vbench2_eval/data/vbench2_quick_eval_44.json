@@ -1,0 +1,287 @@
+{
+  "name": "TIDE VBench-2.0 Quick Evaluation",
+  "version": 1,
+  "description": "覆盖 VBench-2.0 五大能力类别的 44 条轻量诊断子集；用于快速比较和问题定位，不可与官方完整榜单总分直接比较。",
+  "source_root": "/path/to/VBench-2.0",
+  "protocol": {
+    "total_dimensions": 7,
+    "total_prompts": 44,
+    "smoke_test_samples_per_prompt": 1,
+    "recommended_comparison_samples_per_prompt": 3,
+    "generation_text_field": "canonical_prompt or PromptRewriter output",
+    "evaluation_and_filename_field": "canonical_prompt",
+    "filename_rule": "{canonical_prompt[:180]}-{seed_index}.mp4",
+    "note": "三个 arm 始终使用 canonical_prompt 进行官方元数据匹配和视频定位。"
+  },
+  "dimensions": [
+    {
+      "dimension": "Human_Anatomy",
+      "prompt_count": 6,
+      "selection_rationale": "覆盖瑜伽、跑步、多人舞蹈、多人篮球、体操和跳跃。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-001",
+          "source_line": 1,
+          "canonical_prompt": "A man is doing yoga."
+        },
+        {
+          "id": "vbench2-quick-002",
+          "source_line": 5,
+          "canonical_prompt": "A woman is running."
+        },
+        {
+          "id": "vbench2-quick-003",
+          "source_line": 12,
+          "canonical_prompt": "people are dancing."
+        },
+        {
+          "id": "vbench2-quick-004",
+          "source_line": 15,
+          "canonical_prompt": "people are playing basketball."
+        },
+        {
+          "id": "vbench2-quick-005",
+          "source_line": 27,
+          "canonical_prompt": "A man is doing gymnastics."
+        },
+        {
+          "id": "vbench2-quick-006",
+          "source_line": 35,
+          "canonical_prompt": "A man is jumping."
+        }
+      ]
+    },
+    {
+      "dimension": "Composition",
+      "prompt_count": 6,
+      "selection_rationale": "覆盖简单混合生物、复杂多部件生物、反常动作、拟人化物体、多主体交互和复杂组合。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-007",
+          "source_line": 1,
+          "canonical_prompt": "A lion with the wings of an eagle, soaring through the sky with majestic ease."
+        },
+        {
+          "id": "vbench2-quick-008",
+          "source_line": 16,
+          "canonical_prompt": "A giraffe with the body of a whale, the legs of a kangaroo, and the tail of a flamingo, allowing it to leap from one ocean wave to another with remarkable grace."
+        },
+        {
+          "id": "vbench2-quick-009",
+          "source_line": 26,
+          "canonical_prompt": "A lion doing a handstand, balancing perfectly on its front paws while gazing confidently at the audience."
+        },
+        {
+          "id": "vbench2-quick-010",
+          "source_line": 30,
+          "canonical_prompt": "A toaster jumping over an obstacle course, popping up bread slices as it leaps."
+        },
+        {
+          "id": "vbench2-quick-011",
+          "source_line": 35,
+          "canonical_prompt": "A dog and a cat playing video games together, each holding a controller and laughing."
+        },
+        {
+          "id": "vbench2-quick-012",
+          "source_line": 44,
+          "canonical_prompt": "A penguin, a car, a rope, and a tiger are playing basketball. The penguin dribbles the ball while riding on the car, which is speeding across the court. The tiger tries to leap and catch the ball, but the rope tangles itself around the tiger’s legs, causing it to fall while the penguin shoots a three-pointer."
+        }
+      ]
+    },
+    {
+      "dimension": "Dynamic_Spatial_Relationship",
+      "prompt_count": 6,
+      "selection_rationale": "覆盖左右、前后、上下以及从物体下方到上方等动态空间变化。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-013",
+          "source_line": 1,
+          "canonical_prompt": "A dog is on the left of a table, then the dog runs to the front of the table."
+        },
+        {
+          "id": "vbench2-quick-014",
+          "source_line": 3,
+          "canonical_prompt": "A dog is on the right of a table, then the dog runs to the left of the table."
+        },
+        {
+          "id": "vbench2-quick-015",
+          "source_line": 6,
+          "canonical_prompt": "A dog is behind a chair, then the dog runs to the right of the chair."
+        },
+        {
+          "id": "vbench2-quick-016",
+          "source_line": 15,
+          "canonical_prompt": "A cat is under the table, then the cat runs onto the table."
+        },
+        {
+          "id": "vbench2-quick-017",
+          "source_line": 26,
+          "canonical_prompt": "A squirrel is on the left of a rock, then the squirrel jumps to the top of the rock."
+        },
+        {
+          "id": "vbench2-quick-018",
+          "source_line": 45,
+          "canonical_prompt": "A bird is above a tree, then the bird flies to the left of the tree."
+        }
+      ]
+    },
+    {
+      "dimension": "Motion_Order_Understanding",
+      "prompt_count": 6,
+      "selection_rationale": "覆盖人物日常动作、工具操作、猫狗行为和马匹运动的两阶段顺序。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-019",
+          "source_line": 1,
+          "canonical_prompt": "A person is sitting on the couch, then suddenly they get up and start sweeping the floor."
+        },
+        {
+          "id": "vbench2-quick-020",
+          "source_line": 2,
+          "canonical_prompt": "A dog is playing with a ball, then it suddenly starts lying down on the carpet."
+        },
+        {
+          "id": "vbench2-quick-021",
+          "source_line": 3,
+          "canonical_prompt": "A person is cooking dinner, then they suddenly start organizing the pantry."
+        },
+        {
+          "id": "vbench2-quick-022",
+          "source_line": 4,
+          "canonical_prompt": "A cat is watching birds through the window, then it suddenly starts grooming itself."
+        },
+        {
+          "id": "vbench2-quick-023",
+          "source_line": 32,
+          "canonical_prompt": "A cat is chasing a laser pointer, then it suddenly sits down and starts licking its paws."
+        },
+        {
+          "id": "vbench2-quick-024",
+          "source_line": 35,
+          "canonical_prompt": "A horse is walking slowly, then it suddenly starts trotting."
+        }
+      ]
+    },
+    {
+      "dimension": "Camera_Motion",
+      "prompt_count": 8,
+      "selection_rationale": "在同一 Garden 场景上覆盖 zoom、tilt、pan、static 和 orbit，减少内容差异干扰。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-025",
+          "source_line": 1,
+          "canonical_prompt": "Garden, zoom in."
+        },
+        {
+          "id": "vbench2-quick-026",
+          "source_line": 2,
+          "canonical_prompt": "Garden, zoom out."
+        },
+        {
+          "id": "vbench2-quick-027",
+          "source_line": 3,
+          "canonical_prompt": "Garden, tilt up."
+        },
+        {
+          "id": "vbench2-quick-028",
+          "source_line": 4,
+          "canonical_prompt": "Garden, tilt down."
+        },
+        {
+          "id": "vbench2-quick-029",
+          "source_line": 5,
+          "canonical_prompt": "Garden, pan left."
+        },
+        {
+          "id": "vbench2-quick-030",
+          "source_line": 6,
+          "canonical_prompt": "Garden, pan right."
+        },
+        {
+          "id": "vbench2-quick-031",
+          "source_line": 7,
+          "canonical_prompt": "The camera movement is static. Garden, static shot, the camera is fixed."
+        },
+        {
+          "id": "vbench2-quick-032",
+          "source_line": 8,
+          "canonical_prompt": "The camera orbits around in a clockwise direction. Garden."
+        }
+      ]
+    },
+    {
+      "dimension": "Motion_Rationality",
+      "prompt_count": 6,
+      "selection_rationale": "覆盖进食、饮用、切割、倾倒、开灯和关门及其合理结果。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-033",
+          "source_line": 1,
+          "canonical_prompt": "A person is slurping noodles from a steaming bowl."
+        },
+        {
+          "id": "vbench2-quick-034",
+          "source_line": 4,
+          "canonical_prompt": "A person is drinking coffee from a cup."
+        },
+        {
+          "id": "vbench2-quick-035",
+          "source_line": 9,
+          "canonical_prompt": "A person is cutting a watermelon."
+        },
+        {
+          "id": "vbench2-quick-036",
+          "source_line": 14,
+          "canonical_prompt": "A person is pouring olive oil into a frying pan."
+        },
+        {
+          "id": "vbench2-quick-037",
+          "source_line": 40,
+          "canonical_prompt": "A person is turning on the desk lamp."
+        },
+        {
+          "id": "vbench2-quick-038",
+          "source_line": 42,
+          "canonical_prompt": "A person is closing the door."
+        }
+      ]
+    },
+    {
+      "dimension": "Mechanics",
+      "prompt_count": 6,
+      "selection_rationale": "覆盖零重力液体、浮力、下沉、压缩、弹性碰撞和表面张力。",
+      "prompts": [
+        {
+          "id": "vbench2-quick-039",
+          "source_line": 1,
+          "canonical_prompt": "A bowl of soup is tilted in the space station, with the liquid slowly spreading in all directions."
+        },
+        {
+          "id": "vbench2-quick-040",
+          "source_line": 10,
+          "canonical_prompt": "A cork is placed on the surface of a bucket filled with water."
+        },
+        {
+          "id": "vbench2-quick-041",
+          "source_line": 13,
+          "canonical_prompt": "A metal coin is gently placed on the surface of a shallow pool of water."
+        },
+        {
+          "id": "vbench2-quick-042",
+          "source_line": 16,
+          "canonical_prompt": "A timelapse of a wet sponge being compressed between two hands, with the pressure increasing rapidly."
+        },
+        {
+          "id": "vbench2-quick-043",
+          "source_line": 37,
+          "canonical_prompt": "A small, elastic rubber bouncy ball is thrown onto the ground, showing its rapid bounce back upon impact."
+        },
+        {
+          "id": "vbench2-quick-044",
+          "source_line": 51,
+          "canonical_prompt": "A water droplet slides down the surface of a freshly washed car window, forming a spherical shape as it moves"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+run:
+  iterations: 2
+  initial_prompt_samples: 0
+  improved_prompt_samples: 4
+  include_champion_residual: false
+  require_exact_improved_samples: true
+  videos_per_prompt: 1
+  early_stop_patience: 2
+  duration_seconds: 5
+  video_type: real-world
+  random_seed: 42
+
+text_mllm:
+  # Default off: rewrite, DTPA, prompt sampling, and format repair do not think.
+  # SkillDistiller explicitly enables thinking only for candidate-patch and
+  # four-patch rule-update calls.
+  provider: openai_compatible
+  base_url: https://api.epicllmrouter.top/v1
+  model: deepseek-v4-flash
+  api_key_env: EPICLLMROUTER_API_KEY
+  api_key_required: true
+  dry_run_when_api_key_missing: false
+  temperature: 0.2
+  max_tokens: 8192
+  timeout_seconds: 600
+  max_retries: 5
+  transient_retry_backoff_seconds: 60
+  max_retry_backoff_seconds: 300
+  strip_thinking_output: true
+  enable_thinking: false
+  preserve_thinking: false
+  extra_body:
+    thinking:
+      type: disabled
+
+vision_mllm:
+  # Qwen3.6-35B-A3B is video-understanding-only and never uses thinking.
+  provider: openai_compatible
+  base_url: https://api.epicllmrouter.top/v1
+  model: qwen3.6-35b-a3b
+  api_key_env: EPICLLMROUTER_API_KEY
+  api_key_required: true
+  dry_run_when_api_key_missing: false
+  temperature: 0.2
+  max_tokens: 8192
+  timeout_seconds: 600
+  max_retries: 5
+  transient_retry_backoff_seconds: 60
+  max_retry_backoff_seconds: 300
+  strip_thinking_output: true
+  enable_thinking: false
+  preserve_thinking: false
+  extra_body:
+    thinking:
+      type: disabled
+  video_input:
+    mode: frames
+    max_frames: 10
+    jpeg_quality: 85
+
+t2v:
+  backend: sana_diffusers
+  dry_run: false
+  checkpoint_dir: ${SANA_CKPT_DIR:-/path/to/SANA-Video_2B_480p_diffusers}
+  cuda_visible_devices: "0"
+  size: "832*480"
+  frame_num: 81
+  fps: 16.0
+  sample_steps: 50
+  sample_shift: 8.0
+  guidance_scale: 6.0
+  precision: bf16
+  motion_score: 30
+  clean_caption: false
+  use_resolution_binning: true
+  max_sequence_length: 300
+  diffusers_version: "0.39.0"
+  startup_timeout_seconds: 1800
+  command_timeout_seconds: 1200
+  negative_prompt: "chaotic sequence, deformed limbs, heavy motion blur, jump cuts, jerky movements, temporal artifacts, jitter, ghosting"
+
+selection:
+  # Qwen critique, probing, and pairwise comparison all use direct answers.
+  tournament_thinking: false
+  lambda_penalty: 0.1
+  double_check_swapped_order: true
+  random_on_disagreement: false
+  strict_action_constraints:
+    enabled: false
+
+outputs:
+  root_dir: outputs/evalcrafter100_qwen36_35ba3b_posneg_training
+
+skill_learning:
+  enabled: true
+  skill_dir: skills/rewrite-t2v-prompt
+  rules_file: skills/rewrite-t2v-prompt/rules.json
+  activation_mode: normal
+  random_activation_count: null
+  random_activation_seed: 42
+  freeze_negative_prompt: false

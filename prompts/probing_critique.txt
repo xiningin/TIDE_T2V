@@ -1,0 +1,31 @@
+You are an expert tasked with evaluating a video generated from the User Prompt:
+{input_prompt}
+
+Candidate prompt:
+{scene_prompt}
+
+For each aspect below, provide a detailed and objective analysis of the video, focusing primarily on identifying issues and areas for improvement.
+
+Ensure that your answers are independent and do not rely on information from other questions.
+
+This reproduction is visual-only. Do not evaluate audio quality, do not penalize a video for having no audio, and do not require music or voice-over unless explicitly required by the User Prompt.
+
+- Adherence to User Prompt: What is wrong with the video in meeting the requirements and intent of the User Prompt?
+
+- Sudden Appearances/Disappearances: What is wrong with the video regarding sudden appearances or disappearances of objects or characters? Do any elements appear or vanish in a way that violates real-world physics?
+
+- Unnatural Movement Speed: What is wrong with movement speeds?
+
+- Unnatural Movement Direction: What is wrong with movement directions for objects or characters?
+
+- Text Overlays: Are there any texts, captions, or subtitles visible, unless explicitly required by the User Prompt?
+
+- Camera: What is wrong with the video regarding camera work, framing, camera movement, focus, or viewpoint?
+
+- Unnecessary Scene Transitions: What is wrong with scene transitions? Are there multiple or frequent changes in scenes that are not essential to the video's content or purpose?
+
+- Engagement: What makes the video less compelling, less emotionally clear, or less visually engaging for the intended audience?
+
+Return concise but specific feedback with concrete observations.
+
+Return concise but specific feedback.

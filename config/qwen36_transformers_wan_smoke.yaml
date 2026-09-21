@@ -1,0 +1,57 @@
+run:
+  iterations: 1
+  initial_prompt_samples: 1
+  improved_prompt_samples: 1
+  videos_per_prompt: 1
+  early_stop_patience: 2
+  duration_seconds: 5
+  video_type: real-world
+  random_seed: 42
+
+mllm:
+  provider: transformers
+  model: ${QWEN_MODEL_DIR:-/path/to/Qwen3.6-27B}
+  model_path: ${QWEN_MODEL_DIR:-/path/to/Qwen3.6-27B}
+  cuda_visible_devices: "0"
+  torch_dtype: bfloat16
+  device_map: auto
+  temperature: 0.2
+  max_tokens: 1024
+  timeout_seconds: 300
+  max_retries: 0
+  api_key_required: false
+  dry_run_when_api_key_missing: false
+  video_input:
+    mode: frames
+    max_frames: 2
+    jpeg_quality: 85
+
+t2v:
+  backend: wan_cli
+  dry_run: false
+  wan_dir: ${WAN_DIR:-/path/to/Wan2.1}
+  python_executable: ${T2V_PYTHON:-python}
+  ckpt_dir: ${WAN_CKPT_DIR:-/path/to/Wan2.1-T2V-1.3B}
+  cuda_visible_devices: "1"
+  task: t2v-1.3B
+  size: "832*480"
+  offload_model: true
+  t5_cpu: false
+  t5_fsdp: false
+  dit_fsdp: false
+  ulysses_size: 1
+  ring_size: 1
+  sample_solver: unipc
+  sample_steps: 10
+  sample_shift: 8
+  sample_guide_scale: 6
+  frame_num: 17
+  command_timeout_seconds: 0
+
+selection:
+  lambda_penalty: 0.1
+  double_check_swapped_order: false
+  random_on_disagreement: true
+
+outputs:
+  root_dir: outputs/qwen36_transformers_wan_smoke

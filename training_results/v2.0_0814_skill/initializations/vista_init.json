@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "name": "rewrite-t2v-prompt-vista-init",
+  "initialization": "vista-init",
+  "revision": 0,
+  "source_prompt_sha256": {
+    "prompts/planner.txt": "c02853e2497a1fd91b777c35134c54951cfee9035779c75ffde08e3943d86b1a",
+    "prompts/prompt_sampler.txt": "63ccd755861fc35bbeb1151626cff1e8a775270d2bf57a8b20cbf1da5ec10bdc",
+    "prompts/dtpa.txt": "d59468daccbbbd2049b0d2ea82cf0a3cc8d6ec5f8c6a60e976746dfc43f1b203"
+  },
+  "modules": [
+    {
+      "rule_id": "vista.intent_preservation",
+      "trigger": "Always apply to a user request or an existing Video Prompt.",
+      "instruction": "Fully address the User Prompt, preserve its core actions and intent, and include only elements explicitly required or clearly implied. Do not add unnecessary complexity.",
+      "capability_scope": ["prompt_alignment", "context_fidelity"],
+      "expected_side_effects": ["Monitor omitted explicit requirements and unsupported embellishment."]
+    },
+    {
+      "rule_id": "vista.duration_scene_budget",
+      "trigger": "The requested video is short, the request is simple, or a single scene is specified.",
+      "instruction": "Use a single simple scene that fits the stated duration. Make the scene's script, events, and visual flow end within that duration; do not introduce unnecessary scene transitions.",
+      "capability_scope": ["temporal_consistency", "scene_transition"],
+      "expected_side_effects": ["Monitor loss of explicitly requested multi-scene content."]
+    },
+    {
+      "rule_id": "vista.scene_components",
+      "trigger": "The source needs expansion into a complete video description.",
+      "instruction": "Specify the central subjects, their distinct visible traits only when useful, purposeful actions, the visual environment, one complementary camera plan, and the mood. Keep every component subordinate to the core message.",
+      "capability_scope": ["visual_fidelity", "engagement", "camera_focus"],
+      "expected_side_effects": ["Monitor prompt bloat and invented details."]
+    },
+    {
+      "rule_id": "vista.motion_physics",
+      "trigger": "The source contains a visible action, interaction, or moving subject.",
+      "instruction": "Translate the requested action into an observable timeline: show its initial state, physically connected movement or interaction, and visible end result in that order. Bind every phase to the same subject, keep motion natural and feasible for the short clip, and do not replace the action with a static pose or unrelated activity.",
+      "capability_scope": ["motions_and_dynamics", "physical_commonsense"],
+      "expected_side_effects": ["Monitor over-specified choreography and event-order drift."]
+    },
+    {
+      "rule_id": "vista.visual_only_delivery",
+      "trigger": "Audio, dialogue, narration, captions, subtitles, or visible text are not explicitly requested.",
+      "instruction": "Keep the prompt visual-only. Add no dialogue, narration, voice-over, music, sound effects, captions, subtitles, logos, or other visible text.",
+      "capability_scope": ["visual_safety", "text_overlay"],
+      "expected_side_effects": ["Monitor removal of explicitly requested visible text or audio."]
+    }
+  ]
+}

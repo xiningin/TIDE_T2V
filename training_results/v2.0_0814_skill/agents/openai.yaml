@@ -1,0 +1,4 @@
+interface:
+  display_name: "T2V Prompt Rewriter"
+  short_description: "One-pass positive and conditional-negative T2V rewriting"
+  default_prompt: "Use $rewrite-t2v-prompt to turn this request into one generation-ready positive/negative prompt pair."

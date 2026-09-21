@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-08-10",
+  "vbench_seeds": [3407, 7859, 12491],
+  "arms": {
+    "sana_raw": {"model": "SANA-Video_2B", "method": "raw"},
+    "sana_vista": {"model": "SANA-Video_2B", "method": "vista"},
+    "sana_ours": {"model": "SANA-Video_2B", "method": "ours"},
+    "sana_ours_wo_neg": {"model": "SANA-Video_2B", "method": "ours_wo_neg"},
+    "sana_ours_wo_update_limits": {"model": "SANA-Video_2B", "method": "ours_wo_update_limits"},
+    "sana_init_skill": {"model": "SANA-Video_2B", "method": "init_skill"},
+    "cogvideox15_raw": {"model": "CogVideoX1.5-5B", "method": "raw"},
+    "cogvideox15_vpo": {"model": "CogVideoX1.5-5B", "method": "vpo"},
+    "cogvideox15_ours": {"model": "CogVideoX1.5-5B", "method": "ours"},
+    "wan22_raw": {"model": "Wan2.2-TI2V-5B", "method": "raw"},
+    "wan22_video_prompting_skill": {"model": "Wan2.2-TI2V-5B", "method": "Square-Zero-Labs/video-prompting-skill"},
+    "wan22_ours": {"model": "Wan2.2-TI2V-5B", "method": "ours"}
+  },
+  "prompt_sets": {
+    "vbench_subject": {
+      "benchmark": "vbench",
+      "file": "data/vbench/prompts/subject_consistency.txt",
+      "expected_prompt_count": 72,
+      "dimensions": ["subject_consistency", "motion_smoothness", "dynamic_degree"]
+    },
+    "vbench_overall": {
+      "benchmark": "vbench",
+      "file": "data/vbench/prompts/overall_consistency.txt",
+      "expected_prompt_count": 93,
+      "dimensions": ["overall_consistency", "aesthetic_quality", "imaging_quality"]
+    },
+    "vbench_multiple_objects": {
+      "benchmark": "vbench",
+      "file": "data/vbench/prompts/multiple_objects.txt",
+      "expected_prompt_count": 82,
+      "dimensions": ["multiple_objects"]
+    },
+    "vbench_human_action": {
+      "benchmark": "vbench",
+      "file": "data/vbench/prompts/human_action.txt",
+      "expected_prompt_count": 100,
+      "dimensions": ["human_action"]
+    },
+    "vbench_spatial_relationship": {
+      "benchmark": "vbench",
+      "file": "data/vbench/prompts/spatial_relationship.txt",
+      "expected_prompt_count": 84,
+      "dimensions": ["spatial_relationship"]
+    },
+    "compbench_interaction": {
+      "benchmark": "t2v_compbench",
+      "file": "data/t2v_compbench/prompts/6_interaction.txt",
+      "metadata": "data/t2v_compbench/metadata/object_interactions.json",
+      "expected_prompt_count": 200,
+      "dimensions": ["object_interactions"]
+    },
+    "compbench_numeracy": {
+      "benchmark": "t2v_compbench",
+      "file": "data/t2v_compbench/prompts/7_numeracy.txt",
+      "metadata": "data/t2v_compbench/metadata/generative_numeracy.json",
+      "expected_prompt_count": 200,
+      "dimensions": ["generative_numeracy"]
+    }
+  },
+  "groups": {
+    "main_vbench": {
+      "arms": [
+        "sana_raw", "sana_vista", "sana_ours",
+        "cogvideox15_raw", "cogvideox15_vpo", "cogvideox15_ours",
+        "wan22_raw", "wan22_video_prompting_skill", "wan22_ours"
+      ],
+      "prompt_sets": [
+        "vbench_subject", "vbench_overall", "vbench_multiple_objects",
+        "vbench_human_action", "vbench_spatial_relationship"
+      ],
+      "samples_per_prompt": 3
+    },
+    "sana_ablation_vbench_core": {
+      "arms": ["sana_ours_wo_neg", "sana_ours_wo_update_limits", "sana_init_skill"],
+      "prompt_sets": ["vbench_subject", "vbench_overall"],
+      "samples_per_prompt": 3
+    },
+    "sana_compbench_diagnostic": {
+      "arms": ["sana_raw", "sana_vista", "sana_ours"],
+      "prompt_sets": ["compbench_interaction", "compbench_numeracy"],
+      "samples_per_prompt": 1
+    }
+  }
+}
+

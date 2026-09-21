@@ -1,0 +1,14 @@
+visual:
+  - visual_fidelity
+  - motions_and_dynamics
+  - temporal_consistency
+  - camera_focus
+  - visual_safety
+context:
+  - contextual_suitability
+  - video_characters
+  - video_format
+  - video_prompt_alignment
+  - physical_commonsense
+  - timeline_and_transition
+  - engagement

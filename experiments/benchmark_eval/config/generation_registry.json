@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0",
+  "updated": "2026-08-12",
+  "python": "python",
+  "fixed_negative_prompt": "chaotic sequence, deformed limbs, heavy motion blur, jump cuts, jerky movements, temporal artifacts, jitter, ghosting",
+  "generators": {
+    "sana": {
+      "backend": "sana_diffusers",
+      "config": "../../../config/qwen36_transformers_sana_5s.yaml",
+      "checkpoint": "/path/to/SANA-Video_2B_480p_diffusers",
+      "width": 832,
+      "height": 480,
+      "frames": 81,
+      "fps": 16,
+      "steps": 50,
+      "guidance_scale": 6.0,
+      "precision": "bf16",
+      "startup_timeout_seconds": 1800,
+      "command_timeout_seconds": 1200
+    },
+    "cogvideox15": {
+      "backend": "cogvideox_diffusers",
+      "checkpoint": "/path/to/CogVideoX1.5-5B",
+      "width": 832,
+      "height": 480,
+      "frames": 81,
+      "fps": 16,
+      "steps": 50,
+      "guidance_scale": 6.0,
+      "precision": "bf16",
+      "enable_cpu_offload": false,
+      "vae_tiling": true,
+      "vae_slicing": true
+    },
+    "wan22": {
+      "backend": "wan_ti2v",
+      "wan_repo": "/tmp/Wan2.2_repo",
+      "checkpoint": "/path/to/Wan2.2-TI2V-5B",
+      "width": 832,
+      "height": 480,
+      "frames": 81,
+      "fps": 16,
+      "steps": 50,
+      "guidance_scale": 5.0,
+      "sample_shift": 3.0
+    }
+  },
+  "prompt_methods": {
+    "raw": {
+      "type": "raw"
+    },
+    "ours": {
+      "type": "skill",
+      "rewrite_config": "../../../config/deepseek_qwen37plus_sana_posneg_train.yaml",
+      "skill_dir": "../../../outputs/evalcrafter100_v11_unbounded8k_qwen36_35ba3b_gpus2345_v2/working_skill",
+      "rules_file": "../../../outputs/evalcrafter100_v11_unbounded8k_qwen36_35ba3b_gpus2345_v2/working_skill/rules.json",
+      "drop_conditional_negative": false
+    },
+    "ours_wo_neg": {
+      "type": "skill",
+      "rewrite_config": "../../../config/deepseek_qwen37plus_sana_posneg_train.yaml",
+      "skill_dir": "../../../outputs/evalcrafter100_v11_unbounded8k_qwen36_35ba3b_gpus2345_v2/working_skill",
+      "rules_file": "../../../outputs/evalcrafter100_v11_unbounded8k_qwen36_35ba3b_gpus2345_v2/working_skill/rules.json",
+      "drop_conditional_negative": true
+    },
+    "init_skill": {
+      "type": "skill",
+      "rewrite_config": "../../../config/deepseek_qwen37plus_sana_posneg_train.yaml",
+      "skill_dir": "../../../skills/rewrite-t2v-prompt",
+      "rules_file": "../../../skills/rewrite-t2v-prompt/initializations/posneg_v1_1.json",
+      "drop_conditional_negative": false
+    },
+    "vpo": {
+      "type": "vpo",
+      "checkpoint": "/path/to/VPO-5B",
+      "rewrite_seed": 42,
+      "max_new_tokens": 1024,
+      "temperature": 0.7,
+      "top_p": 1.0
+    }
+  },
+  "arms": {
+    "sana_raw": {
+      "ready": true,
+      "expected_tasks": 1693,
+      "generator": "sana",
+      "prompt_method": "raw",
+      "groups": [
+        "main_vbench",
+        "sana_compbench_diagnostic"
+      ],
+      "experiment_dir": "../../cross_model_results/sana-2b"
+    },
+    "sana_ours": {
+      "ready": true,
+      "expected_tasks": 1693,
+      "generator": "sana",
+      "prompt_method": "ours",
+      "groups": [
+        "main_vbench",
+        "sana_compbench_diagnostic"
+      ],
+      "experiment_dir": "../../cross_model_results/sana-2b"
+    },
+    "sana_ours_wo_neg": {
+      "ready": true,
+      "expected_tasks": 495,
+      "generator": "sana",
+      "prompt_method": "ours_wo_neg",
+      "groups": [
+        "sana_ablation_vbench_core"
+      ],
+      "experiment_dir": "../../training_set_ablation/pos"
+    },
+    "sana_init_skill": {
+      "ready": true,
+      "expected_tasks": 495,
+      "generator": "sana",
+      "prompt_method": "init_skill",
+      "groups": [
+        "sana_ablation_vbench_core"
+      ],
+      "experiment_dir": "../../training_set_ablation/init_skill"
+    },
+    "cogvideox15_raw": {
+      "ready": true,
+      "expected_tasks": 1293,
+      "generator": "cogvideox15",
+      "prompt_method": "raw",
+      "groups": [
+        "main_vbench"
+      ],
+      "experiment_dir": "../../cross_model_results/cogvideox1.5-5b"
+    },
+    "cogvideox15_ours": {
+      "ready": true,
+      "expected_tasks": 1293,
+      "generator": "cogvideox15",
+      "prompt_method": "ours",
+      "groups": [
+        "main_vbench"
+      ],
+      "experiment_dir": "../../cross_model_results/cogvideox1.5-5b"
+    },
+    "cogvideox15_vpo": {
+      "ready": true,
+      "expected_tasks": 1293,
+      "generator": "cogvideox15",
+      "prompt_method": "vpo",
+      "groups": [
+        "main_vbench"
+      ],
+      "experiment_dir": "../../cross_method_results/vpo"
+    },
+    "sana_vista": {
+      "ready": false,
+      "groups": [
+        "main_vbench",
+        "sana_compbench_diagnostic"
+      ],
+      "experiment_dir": "../../cross_method_results/vista",
+      "blocked_reason": "The current VistaAgent is TIDE-training-specific and has no pure-VISTA benchmark adapter that re-generates the selected prompt with the paired benchmark seed."
+    },
+    "sana_ours_wo_update_limits": {
+      "ready": false,
+      "groups": [
+        "sana_ablation_vbench_core"
+      ],
+      "experiment_dir": "../../training_set_ablation/pos+neg_unrestricted",
+      "blocked_reason": "No trained unrestricted-update Skill checkpoint exists in the workspace."
+    },
+    "wan22_raw": {
+      "ready": true,
+      "groups": [
+        "main_vbench"
+      ],
+      "experiment_dir": "../../cross_model_results/wan2.2-5b",
+      "generator": "wan22",
+      "prompt_method": "raw",
+      "expected_tasks": 1293
+    },
+    "wan22_ours": {
+      "ready": true,
+      "groups": [
+        "main_vbench"
+      ],
+      "experiment_dir": "../../cross_model_results/wan2.2-5b",
+      "generator": "wan22",
+      "prompt_method": "ours",
+      "expected_tasks": 1293
+    },
+    "wan22_video_prompting_skill": {
+      "ready": false,
+      "groups": [
+        "main_vbench"
+      ],
+      "experiment_dir": "../../cross_method_results/video-prompting-skill",
+      "blocked_reason": "The prompt Skill is present, but there is no pinned batch executor and the required official Wan2.2 inference checkout is absent."
+    }
+  }
+}

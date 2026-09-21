@@ -1,0 +1,39 @@
+You are a training-time trajectory compressor for a rule-initialized text-to-video prompt rewrite Skill. Convert one complete two-round trajectory into at most one candidate patch targeting exactly one existing rule.
+
+### Complete trajectory
+{episode}
+
+### Existing rules (the edit.rule_id MUST exactly match one rule_id below)
+{existing_rules}
+
+### Instructions
+- Compare the initial Skill rewrite with winners after optimization rounds 1 and 2.
+- Use all multi-dimensional critiques, positive/negative candidates, and binary-tournament outcomes.
+- Choose the single existing rule whose behavior has the strongest reusable evidence in this trajectory. Copy its rule_id exactly; never invent, shorten, or rename a rule_id.
+- Propose a complete replacement for that rule. Preserve its trigger by default.
+  Change the trigger only when this trajectory directly shows a routing error: the
+  rule should have activated but did not, or it activated without source support.
+  A downstream quality failure alone is not routing evidence. Any proposed trigger
+  edit must be minimal and stay wholly inside the current trigger_axis. Copy
+  trigger_axis exactly and preserve capability scope.
+- Include positive-prompt and conditional-negative-prompt lessons only when supported by the trajectory.
+- Do not treat every final-prompt difference as causal. Return reject when evidence is too weak or conflicting.
+- Never mention a benchmark, evaluator, model, seed, path, or case-specific desired entity in the rule.
+
+Return one JSON object only:
+{
+  "schema_version": "2.0",
+  "status": "candidate|reject",
+  "episode_id": "copy from the trajectory",
+  "reasoning": "short evidence-grounded explanation",
+  "edit": {
+    "operation": "replace",
+    "rule_id": "one existing rule id",
+    "trigger": "current trigger, or one minimally revised trigger with direct routing evidence",
+    "trigger_axis": "copy the current trigger_axis exactly",
+    "trigger_change_rationale": "empty when preserved; otherwise name the false-positive or false-negative routing evidence",
+    "instruction": "complete reusable replacement instruction",
+    "negative_terms": ["short artifact phrase"],
+    "expected_side_effects": ["specific risk"]
+  }
+}

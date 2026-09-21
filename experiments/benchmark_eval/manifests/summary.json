@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "groups": {
+    "main_vbench": {
+      "arms": 9,
+      "tasks_per_arm": 1293,
+      "tasks": 11637,
+      "manifest": "manifests/main_vbench.jsonl"
+    },
+    "sana_ablation_vbench_core": {
+      "arms": 3,
+      "tasks_per_arm": 495,
+      "tasks": 1485,
+      "manifest": "manifests/sana_ablation_vbench_core.jsonl"
+    },
+    "sana_compbench_diagnostic": {
+      "arms": 3,
+      "tasks_per_arm": 400,
+      "tasks": 1200,
+      "manifest": "manifests/sana_compbench_diagnostic.jsonl"
+    }
+  },
+  "total_tasks": 14322
+}

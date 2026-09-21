@@ -1,0 +1,102 @@
+{
+  "schema_version": "2.0",
+  "name": "rewrite-t2v-prompt-posneg-v1.1-init",
+  "skill_version": "1.1",
+  "initialization": "vista-init-posneg-v1.1",
+  "revision": 0,
+  "trigger_policy": {
+    "version": "1.1",
+    "trigger_trainable": true,
+    "update_mode": "conservative_evidence_gated",
+    "trigger_axis_frozen": true,
+    "capability_scope_frozen": true,
+    "min_batch_change_support": 2,
+    "max_trigger_chars": 320,
+    "max_conditional_trigger_jaccard": 0.35,
+    "unique_axis_required": true,
+    "multi_activation_allowed": true,
+    "global_rule_ids": [
+      "vista.intent_preservation"
+    ],
+    "initialization_note": "Fresh v1.1 initialization: posneg_v1 instructions with the v1.1 routing contract and no learned Wave history."
+  },
+  "update_policy": {
+    "normal_batch_size": 4,
+    "final_tail_min_size": 1,
+    "final_tail_max_size": 3,
+    "instruction_warning_chars": 8000,
+    "instruction_length_policy": "unbounded_with_soft_warning",
+    "selection": "eligible_wait_age_then_fifo",
+    "consume_after_commit": true
+  },
+  "source_prompt_sha256": {
+    "prompts/planner.txt": "c02853e2497a1fd91b777c35134c54951cfee9035779c75ffde08e3943d86b1a",
+    "prompts/prompt_sampler.txt": "63ccd755861fc35bbeb1151626cff1e8a775270d2bf57a8b20cbf1da5ec10bdc",
+    "prompts/dtpa.txt": "d59468daccbbbd2049b0d2ea82cf0a3cc8d6ec5f8c6a60e976746dfc43f1b203"
+  },
+  "modules": [
+    {
+      "rule_id": "vista.intent_preservation",
+      "trigger": "Always apply to a user request or an existing Video Prompt.",
+      "trigger_axis": "global.intent_fidelity",
+      "instruction": "Fully address the User Prompt, preserve its core actions and intent, and include only elements explicitly required or clearly implied. Do not add unnecessary competing events.",
+      "negative_terms": [],
+      "capability_scope": ["prompt_alignment", "context_fidelity"],
+      "expected_side_effects": ["Monitor omitted explicit requirements and unsupported embellishment."]
+    },
+    {
+      "rule_id": "vista.duration_scene_budget",
+      "trigger": "The source explicitly specifies a duration, a single scene or take, or a multi-scene structure whose time allocation must be preserved.",
+      "trigger_axis": "temporal.duration_scene_budget",
+      "instruction": "Use a single coherent scene that fits the stated duration. Make the scene's script, events, and visual flow end within that duration; detail the requested action rather than adding transitions or unrelated events.",
+      "negative_terms": ["abrupt cut", "discontinuous motion"],
+      "capability_scope": ["temporal_consistency", "scene_transition"],
+      "expected_side_effects": ["Monitor loss of explicitly requested multi-scene content."]
+    },
+    {
+      "rule_id": "vista.scene_components",
+      "trigger": "The source omits visual presentation details needed to render a coherent shot, such as environment, framing, or lighting.",
+      "trigger_axis": "presentation.renderability_completion",
+      "instruction": "Specify the central subjects, stable visible traits, initial screen positions, purposeful actions, the visual environment, one complementary camera plan, and lighting or mood when useful. Keep every component subordinate to the core message.",
+      "negative_terms": ["framing drift"],
+      "capability_scope": ["visual_fidelity", "engagement", "camera_focus"],
+      "expected_side_effects": ["Monitor prompt bloat and invented details."]
+    },
+    {
+      "rule_id": "vista.motion_physics",
+      "trigger": "The source requests visible subject motion, a physical interaction or force, an object state change, or an explicitly static living subject that needs minimal non-state-changing motion cues.",
+      "trigger_axis": "motion.kinematics_physics",
+      "instruction": "Translate the requested action into a detailed observable timeline: state initial pose and screen position, direction and path of travel, continuous changes in speed or orientation, physical contact and force, relevant environmental or material response, and a visible end state in order. Bind every phase to the same subject and keep the event budget feasible for the short clip.",
+      "negative_terms": ["sliding motion", "trajectory drift", "broken contact", "impossible deformation", "discontinuous motion"],
+      "capability_scope": ["motions_and_dynamics", "physical_commonsense"],
+      "expected_side_effects": ["Monitor over-specified choreography, event-order drift, and actions that cannot finish in the duration."]
+    },
+    {
+      "rule_id": "vista.frame_exit_reentry",
+      "trigger": "A requested subject leaves the frame and later returns, crosses a frame boundary, or temporarily becomes occluded during a continuous action.",
+      "trigger_axis": "continuity.frame_boundary",
+      "instruction": "State the exit edge or occluder, preserve the subject's appearance and direction of travel while off-screen, and specify the physically consistent re-entry edge, timing, and resumed motion. Do not invent a re-entry when the source action ends off-screen.",
+      "negative_terms": ["identity switching", "abrupt appearance", "sudden disappearance", "reversed motion"],
+      "capability_scope": ["temporal_consistency", "motions_and_dynamics"],
+      "expected_side_effects": ["Monitor unnecessary re-entry and excessive trajectory detail."]
+    },
+    {
+      "rule_id": "vista.identity_count_guard",
+      "trigger": "The source explicitly requires an exact entity count, multiple persistent subjects, a specifically named person or individual, a specific species or breed, or explicitly emphasizes one persistent object as unique. Ordinary singular articles such as 'a' or 'an' do not activate this rule by themselves.",
+      "trigger_axis": "entity.identity_cardinality",
+      "instruction": "State the exact count and give each persistent subject or object a stable role, appearance cue, and separate screen position when needed for tracking. Preserve those identities and counts through every action phase.",
+      "negative_terms": ["duplicated subjects", "missing subjects", "subject fusion", "identity switching", "count drift", "duplicated objects", "object morphing"],
+      "capability_scope": ["temporal_consistency", "prompt_alignment"],
+      "expected_side_effects": ["Monitor visual clutter and suppression of legitimate contact."]
+    },
+    {
+      "rule_id": "vista.visual_only_delivery",
+      "trigger": "Audio, dialogue, narration, captions, subtitles, or visible text are not explicitly requested.",
+      "trigger_axis": "delivery.text_audio",
+      "instruction": "Keep the prompt visual-only. Add no dialogue, narration, voice-over, music, sound effects, captions, subtitles, logos, or other visible text.",
+      "negative_terms": [],
+      "capability_scope": ["visual_safety", "text_overlay"],
+      "expected_side_effects": ["Monitor removal of explicitly requested visible text or audio."]
+    }
+  ]
+}

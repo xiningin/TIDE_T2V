@@ -1,0 +1,231 @@
+{
+  "schema_version": "2.0",
+  "name": "rewrite-t2v-prompt-posneg-v1.1-init",
+  "skill_version": "1.1",
+  "initialization": "vista-init-posneg-v1.1",
+  "revision": 14,
+  "trigger_policy": {
+    "version": "1.1",
+    "trigger_trainable": true,
+    "update_mode": "conservative_evidence_gated",
+    "trigger_axis_frozen": true,
+    "capability_scope_frozen": true,
+    "min_batch_change_support": 2,
+    "max_trigger_chars": 320,
+    "max_conditional_trigger_jaccard": 0.35,
+    "unique_axis_required": true,
+    "multi_activation_allowed": true,
+    "global_rule_ids": [
+      "vista.intent_preservation"
+    ],
+    "initialization_note": "Fresh v1.1 initialization: posneg_v1 instructions with the v1.1 routing contract and no learned Wave history."
+  },
+  "update_policy": {
+    "normal_batch_size": 4,
+    "final_tail_min_size": 1,
+    "final_tail_max_size": 3,
+    "instruction_warning_chars": 8000,
+    "instruction_length_policy": "unbounded_with_soft_warning",
+    "selection": "eligible_wait_age_then_fifo",
+    "consume_after_commit": true
+  },
+  "source_prompt_sha256": {
+    "prompts/planner.txt": "c02853e2497a1fd91b777c35134c54951cfee9035779c75ffde08e3943d86b1a",
+    "prompts/prompt_sampler.txt": "63ccd755861fc35bbeb1151626cff1e8a775270d2bf57a8b20cbf1da5ec10bdc",
+    "prompts/dtpa.txt": "d59468daccbbbd2049b0d2ea82cf0a3cc8d6ec5f8c6a60e976746dfc43f1b203"
+  },
+  "modules": [
+    {
+      "rule_id": "vista.intent_preservation",
+      "trigger": "Always apply to a user request or an existing Video Prompt.",
+      "trigger_axis": "global.intent_fidelity",
+      "instruction": "Fully address the User Prompt, preserve its core actions and intent, and include only elements explicitly required or clearly implied. Do not add unnecessary competing events. When adding details not explicitly required, prefer common, typical attributes that the model can reliably render. Avoid uncommon or specific colors, attributes, or entities that are not clearly implied, as they may cause generation failures.",
+      "negative_terms": [],
+      "capability_scope": [
+        "prompt_alignment",
+        "context_fidelity"
+      ],
+      "expected_side_effects": [
+        "Monitor omitted explicit requirements and unsupported embellishment.",
+        "Monitor generation failures due to uncommon attributes."
+      ]
+    },
+    {
+      "rule_id": "vista.duration_scene_budget",
+      "trigger": "The source explicitly specifies a duration, a single scene or take, or a multi-scene structure whose time allocation must be preserved.",
+      "trigger_axis": "temporal.duration_scene_budget",
+      "instruction": "Use a single coherent scene that fits the stated duration. Make the scene's script, events, and visual flow end within that duration; detail the requested action rather than adding transitions or unrelated events.",
+      "negative_terms": [
+        "abrupt cut",
+        "discontinuous motion"
+      ],
+      "capability_scope": [
+        "temporal_consistency",
+        "scene_transition"
+      ],
+      "expected_side_effects": [
+        "Monitor loss of explicitly requested multi-scene content."
+      ]
+    },
+    {
+      "rule_id": "vista.scene_components",
+      "trigger": "The source omits visual presentation details needed to render a coherent shot, such as environment, framing, or lighting.",
+      "trigger_axis": "presentation.renderability_completion",
+      "instruction": "Specify the central subjects, stable visible traits that remain consistent across all frames, initial screen positions, purposeful actions, the visual environment, one complementary camera plan, and lighting or mood when useful. Ensure the subject is fully visible within the frame and not cropped by the edges; if the subject is a person, the framing should include the entire body unless close-ups are explicitly requested. Describe the general action without specifying the full motion timeline; leave detailed motion to the motion_physics rule. When a species, breed, or named entity is mentioned, include distinguishing visual characteristics to ensure correct identification. Keep every component subordinate to the core message. When describing subjects and objects, explicitly state that their attributes (color, markings, clothing) remain identical across all frames without morphing, shifting, or disappearing. Prioritize temporal consistency: if the requested camera motion or scene complexity is likely to cause artifacts (e.g., morphing, sliding, teleportation), prefer a simpler stable shot (e.g., static camera, small crowd) and omit non-essential details that the model cannot render consistently. When multiple subjects share similar appearance, prefer a single common distinguishing feature (e.g., all wearing the same color collar) that the model can reliably maintain, rather than assigning different fine-grained attributes to each. Prefer general descriptions for non-essential background elements to reduce model cognitive load and improve consistency.",
+      "negative_terms": [
+        "framing drift",
+        "morphing",
+        "deformation",
+        "shape-shifting",
+        "freezing",
+        "jittering",
+        "teleportation",
+        "cropping"
+      ],
+      "capability_scope": [
+        "visual_fidelity",
+        "engagement",
+        "camera_focus"
+      ],
+      "expected_side_effects": [
+        "Monitor prompt bloat and invented details, especially camera plan omission, motion over-specification, and appearance drift across frames.",
+        "Monitor overly complex camera plans that cause instability; prefer static or simple pan when model cannot maintain consistency.",
+        "Monitor over-specification of background details that harm object permanence.",
+        "Monitor subject cropping or partial visibility."
+      ]
+    },
+    {
+      "rule_id": "vista.motion_physics",
+      "trigger": "The source requests visible subject motion, a physical interaction or force, an object state change, or an explicitly static living subject that needs minimal non-state-changing motion cues.",
+      "trigger_axis": "motion.kinematics_physics",
+      "instruction": "Translate the requested action into a simple, robust motion description. Prefer a single continuous movement or a short sequence of at most three phases. Describe the motion as a single continuous flow with natural acceleration and deceleration. Describe the initial pose and screen position, the nature of movement (e.g., slow, deliberate), and the final state. Use result-oriented verbs (e.g., 'unfurls', 'opens', 'descends') where possible, but specify mechanical substeps if they are critical to the intended motion. For each phase, specify a duration (e.g., 'over 2 seconds') to enforce temporal smoothness. For rigid subjects (e.g., objects, most animals), ensure the subject remains rigid (no deformation, stretching, or shape changes). For non-rigid subjects (e.g., facial expressions, flexible materials), describe the deformation in terms of plausible anatomical or physical changes, avoiding unnatural warping, morphing, or stretching. Ensure the subject maintains continuous contact with interacting objects, except for intentional release actions (e.g., throwing, dropping); for such actions, describe the release as a result-oriented state change and avoid detailing the wind-up mechanics. Ensure the subject retains distinct geometry without merging, clipping, or blending. Motion must be physically plausible: no floating, gliding, or weightless motion (except gentle buoyancy drift for explicitly static living subjects), no impossible anatomy, no instantaneous state changes. Motion must evolve continuously across frames with no abrupt resets, jumps, or reappearances; for physical interactions (e.g., ripples, waves), specify gradual energy dissipation and decay. For physical interactions between subjects (e.g., catching, pushing), describe the impact dynamics: the force of contact, resulting recoil, and momentum transfer, if applicable. For objects with rotating parts, explicitly describe the axis of rotation (e.g., 'end-over-end around its longitudinal axis') and ensure the object remains a single coherent piece without splitting or duplication. Avoid describing secondary motion (e.g., tail wagging, ear flopping) that the model cannot reliably execute; focus on primary motion and grounding. Explicitly state that paws or feet should make solid contact with the ground and push off; avoid sliding, gliding, or floating. If the motion is complex (e.g., trot, run), simplify to a walk or a slower pace to reduce artifacts. For multiple subjects, specify that they move simultaneously and identically unless otherwise required; ensure independent motion paths without merging. Keep each phase bound to the same subject. Be aware of model limitations: if the requested physical interaction is likely to be rendered as a ghostly pass-through, describe it as visual occlusion or displacement. Prefer simple patterns that the model can faithfully render. Prioritize temporal consistency: if the requested motion (e.g., camera pan, crowd movement) is likely to cause artifacts, reduce the number of moving subjects, use a static camera, or describe the motion as a result-oriented state change rather than a continuous process.",
+      "negative_terms": [
+        "sliding/gliding motion",
+        "unintended continuous contact",
+        "impossible deformation",
+        "morphing",
+        "clipping",
+        "instantaneous state change",
+        "discontinuous motion",
+        "stationary rotating parts"
+      ],
+      "capability_scope": [
+        "motions_and_dynamics",
+        "physical_commonsense"
+      ],
+      "expected_side_effects": [
+        "Monitor over-specified choreography and physically impossible motion.",
+        "Monitor sequences that exceed model capacity (more than three phases).",
+        "Monitor floating/gliding artifacts (except intended buoyancy).",
+        "Monitor clipping/morphing, premature state completion, and ghostly pass-through.",
+        "Monitor abrupt resets, temporal discontinuities, stuttering, or frame jumps in the generated video.",
+        "Monitor unstable crowd motion and camera motion; prefer static or minimal motion when model cannot maintain consistency.",
+        "Monitor unnatural facial deformation.",
+        "Monitor incorrect rotation axis or object splitting.",
+        "Monitor unintended continuous contact (e.g., object stuck to hand) when release is required.",
+        "Monitor lack of physical interaction feedback (e.g., no recoil, no momentum transfer)."
+      ]
+    },
+    {
+      "rule_id": "vista.frame_exit_reentry",
+      "trigger": "A requested subject leaves the frame and later returns, crosses a frame boundary, or temporarily becomes occluded during a continuous action.",
+      "trigger_axis": "continuity.frame_boundary",
+      "instruction": "State the exit edge or occluder, preserve the subject's appearance and direction of travel while off-screen, and specify the physically consistent re-entry edge, timing, and resumed motion. Do not invent a re-entry when the source action ends off-screen.",
+      "negative_terms": [
+        "identity switching",
+        "abrupt appearance",
+        "sudden disappearance",
+        "reversed motion"
+      ],
+      "capability_scope": [
+        "temporal_consistency",
+        "motions_and_dynamics"
+      ],
+      "expected_side_effects": [
+        "Monitor unnecessary re-entry and excessive trajectory detail.",
+        "Monitor for false activation when source does not explicitly request frame exit or re-entry."
+      ]
+    },
+    {
+      "rule_id": "vista.identity_count_guard",
+      "trigger": "The source explicitly requires an exact entity count, multiple persistent subjects, a specifically named person or individual, a specific species or breed, or explicitly emphasizes one persistent object as unique. Ordinary singular articles such as 'a' or 'an' do not activate this rule by themselves.",
+      "trigger_axis": "entity.identity_cardinality",
+      "instruction": "State the exact count if the model can reliably render it; otherwise, use a clear approximate range (e.g., 'approximately eight'). Use the phrase 'exactly N' when an exact count is given. Explicitly state that the number of subjects is fixed and does not change throughout the sequence. Give each persistent subject or object a stable role, appearance cue, and separate screen position when needed for tracking. Additionally, give each persistent subject a unique visual identifier (e.g., different clothing, accessory, or posture) to distinguish them. For each subject and key object, provide at least one persistent visual attribute (e.g., age range, clothing color, hair style for subjects; type, color, size for objects) and explicitly state that these attributes remain constant across all frames (e.g., 'the woman's blue smock remains the same color and style throughout'). Maintain consistent visual attributes (e.g., position, size, visibility, color) for each entity across frames. Preserve those identities, counts, and attributes through every action phase. When the model is prone to attribute drift, prefer using a single common attribute for all subjects (e.g., all wearing the same color collar) and rely on relative positions or roles for differentiation, as this is more robust than multiple fine-grained traits.",
+      "negative_terms": [
+        "duplicated subjects",
+        "missing subjects",
+        "subject fusion",
+        "identity switching",
+        "count drift",
+        "duplicated objects",
+        "object morphing",
+        "attribute drift"
+      ],
+      "capability_scope": [
+        "temporal_consistency",
+        "prompt_alignment"
+      ],
+      "expected_side_effects": [
+        "Monitor visual clutter and suppression of legitimate contact."
+      ]
+    },
+    {
+      "rule_id": "vista.visual_only_delivery",
+      "trigger": "Audio, dialogue, narration, captions, subtitles, or visible text are not explicitly requested.",
+      "trigger_axis": "delivery.text_audio",
+      "instruction": "Keep the prompt visual-only. Add no dialogue, narration, voice-over, music, sound effects, captions, subtitles, logos, or other visible text.",
+      "negative_terms": [],
+      "capability_scope": [
+        "visual_safety",
+        "text_overlay"
+      ],
+      "expected_side_effects": [
+        "Monitor removal of explicitly requested visible text or audio."
+      ]
+    }
+  ],
+  "last_batch_update": {
+    "timestamp": "2026-08-14T08:51:59.237979+00:00",
+    "batch_size": 2,
+    "update_kind": "final_tail_update",
+    "evidence_episode_ids": [
+      "6fb9a8e362f0",
+      "bffafeb62565"
+    ],
+    "rule_id": "vista.motion_physics",
+    "reasoning": "Two patches (bffafeb62565, 6fb9a8e362f0) independently target the same rule's instruction. Patch bffafeb62565 shows that adding explicit grounding language (solid contact, push off) and simplifying complex motion (e.g., walk instead of trot) reduces sliding/gliding artifacts. Patch 6fb9a8e362f0 shows that describing impact dynamics (recoil, momentum transfer) improves physical plausibility in interactions. Both changes are narrow, compatible, and supported by the evidence. No routing evidence; trigger, trigger_axis, and capability_scope are preserved. Negative terms unchanged. Expected side effects are updated to include monitoring for missing physical feedback.",
+    "instruction_length": 3151,
+    "instruction_warning_chars": 8000,
+    "instruction_length_warning": false,
+    "trigger_changed": false,
+    "trigger_support_count": 0,
+    "trigger_validation": {
+      "valid": true,
+      "changed": false,
+      "max_conditional_trigger_jaccard": 0.04,
+      "overlaps": [
+        {
+          "rule_id": "vista.duration_scene_budget",
+          "jaccard": 0.0
+        },
+        {
+          "rule_id": "vista.scene_components",
+          "jaccard": 0.0
+        },
+        {
+          "rule_id": "vista.frame_exit_reentry",
+          "jaccard": 0.0345
+        },
+        {
+          "rule_id": "vista.identity_count_guard",
+          "jaccard": 0.0227
+        },
+        {
+          "rule_id": "vista.visual_only_delivery",
+          "jaccard": 0.04
+        }
+      ],
+      "errors": []
+    }
+  }
+}

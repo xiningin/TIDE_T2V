@@ -1,0 +1,24 @@
+# Core runtime dependencies for the TIDE framework (text rewriting, trajectory
+# generation orchestration, and rule distillation). These are enough to run the
+# text-only rewrite path and the dry-run smoke tests.
+PyYAML>=6.0
+requests>=2.31
+opencv-python>=4.8
+
+# Optional: the OpenAI SDK is only needed for the Ark Responses API provider.
+# Install it if you use provider: ark.
+#   pip install "openai>=1.0"
+
+# ---------------------------------------------------------------------------
+# GPU / model dependencies are intentionally NOT pinned here because they are
+# environment-specific (CUDA version, driver, backend). Install them yourself
+# in a dedicated environment before running real video generation or local LLM
+# serving:
+#
+#   * SANA-Video (T2V backbone): torch + diffusers>=0.37 (see the config file's
+#     ``diffusers_version``), plus the SANA-Video checkpoint.
+#   * Local Qwen video judge served with vLLM: torch + vllm.
+#   * VBench-2.0 / T2V-CompBench evaluation: follow each benchmark's official
+#     environment instructions; these are external checkouts (see
+#     experiments/benchmark_eval/official/ and vbench2_eval/README.md).
+# ---------------------------------------------------------------------------

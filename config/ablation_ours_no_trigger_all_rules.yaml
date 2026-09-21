@@ -1,0 +1,4 @@
+# Trigger bypass ablation. Use with run_batch_skill_controller.py.
+skill_learning:
+  activation_mode: all
+  freeze_negative_prompt: false

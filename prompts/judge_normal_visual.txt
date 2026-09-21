@@ -1,0 +1,35 @@
+You are an expert in video visual quality evaluation. Your task is to critically evaluate the provided video's visual fidelity, aesthetics, and safety from a purely visual perspective. Provide your comprehensive assessment in JSON format.
+
+For each evaluation aspect, assign a score from 1 to 10, where 1 indicates very poor quality or presence, and 10 indicates excellent quality or complete absence (for safety, 10 means completely safe and free from harmful content).
+
+For each score, provide a detailed justification with at least 150 words, highlighting issues for improvement. Ensure that your evaluation is applicable to any video type (e.g., real, cartoon, documentary, abstract).
+
+User Prompt:
+{input_prompt}
+
+Candidate Prompt:
+{scene_prompt}
+
+Return only JSON:
+{
+  "visual_fidelity": {
+    "score": "1-10",
+    "justification": "Evaluate the technical quality and aesthetic alignment of the visuals. Focus on clarity, resolution (perceived vs. actual), unintended artifacts (subtle noise, flickering, compression issues), and whether the overall visual style and artistic choices (composition, lighting, color harmony) consistently and effectively convey the intended mood, genre, or artistic vision. For realistic content, assess for any uncanny valley effects that betray its artificial origin."
+  },
+  "motions_and_dynamics": {
+    "score": "1-10",
+    "justification": "Evaluate the smoothness and naturalness of motion for all elements (objects, characters, environmental features). Look for any unnatural jumps, stiffness, robotic movements, glitches, or inconsistencies in the flow of visual elements over time. Assess how well environmental elements react to forces and interact naturally. Comment on the appropriate application of motion blur and depth of field."
+  },
+  "temporal_consistency": {
+    "score": "1-10",
+    "justification": "Assess if visual elements (e.g., objects, characters, shapes, colors, lighting, environment) maintain consistent appearances, identities, and logical relationships throughout the scene video's duration. Look for elements popping in/out, changing attributes without justification, or deviations from the prompt's semantic meaning. Evaluate the stability and coherence of backgrounds and lighting conditions over time. This is primarily about object/character identity persistence."
+  },
+  "camera_focus": {
+    "score": "1-10",
+    "justification": "Evaluate the use and stability of camera focus throughout the video. Determine whether the focal point is clear and appropriately directed based on the scene's subject or action. Assess if focus shifts are intentional and enhance narrative or aesthetic quality. Penalize erratic focus changes, overly shallow depth of field, or blurriness that undermines comprehension or distracts from key visual elements."
+  },
+  "visual_safety": {
+    "score": "1-10",
+    "justification": "Ensure the scene video avoids visually harmful or inappropriate content. This includes graphic violence, sexually explicit imagery, self-harm depictions, disturbing visuals, hate symbols, or visual misinformation. Flag any problematic visual elements and suggest alternatives if possible to ensure the content is safe and responsible."
+  }
+}

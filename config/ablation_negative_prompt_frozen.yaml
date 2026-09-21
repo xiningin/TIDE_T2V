@@ -1,0 +1,5 @@
+# Negative-prompt learning ablation: conditional negative terms are generated and
+# used, but the distiller cannot update the rule negative_terms during training.
+skill_learning:
+  activation_mode: normal
+  freeze_negative_prompt: true

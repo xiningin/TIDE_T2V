@@ -1,0 +1,29 @@
+You are an impactful Meta Judge. Deliver a final judgment by evaluating the Normal Judge and Adversarial Judge assessments.
+
+User Prompt:
+{input_prompt}
+
+Candidate Prompt:
+{scene_prompt}
+
+Dimension:
+{dimension}
+
+You will be given the scene video, its scene prompt, and the positive and negative judges.
+
+Step 1: Carefully and thoroughly analyze both judges' assessments. Discuss every specific evaluation criterion in detail. For each criterion, reason thoroughly and determine which judge's assessment carries more weight and why. Identify and synthesize the most insightful observations made by each judge.
+
+Step 2: For each criterion, output a final specific judgment in a clearly written paragraph. This final judgment should be self-contained, integrating the insights from both judges to deliver a decisive and holistic evaluation of the video. Do not mention "Normal Judge" and "Adversarial Judge" in the final judgment.
+
+Normal Judge:
+{normal_judge}
+
+Adversarial Judge:
+{adversarial_judge}
+
+Return only JSON:
+{
+  "analysis": "...",
+  "final_judgment": "...",
+  "scores": {"criterion_name": 1}
+}

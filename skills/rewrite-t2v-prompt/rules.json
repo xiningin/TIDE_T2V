@@ -1,0 +1,286 @@
+{
+  "schema_version": "2.0",
+  "name": "rewrite-t2v-prompt-posneg-v1.1",
+  "skill_version": "1.1",
+  "initialization": "vista-init-posneg-v1",
+  "revision": 16,
+  "trigger_policy": {
+    "version": "1.1",
+    "trigger_trainable": true,
+    "update_mode": "conservative_evidence_gated",
+    "trigger_axis_frozen": true,
+    "capability_scope_frozen": true,
+    "min_batch_change_support": 2,
+    "max_trigger_chars": 320,
+    "max_conditional_trigger_jaccard": 0.35,
+    "unique_axis_required": true,
+    "multi_activation_allowed": true,
+    "global_rule_ids": [
+      "vista.intent_preservation"
+    ],
+    "migration_note": "Revision 13 normalized the v1.1 trigger axes. Revision 14 enables conservative evidence-gated trigger learning while keeping trigger_axis and capability_scope frozen."
+  },
+  "source_prompt_sha256": {
+    "prompts/planner.txt": "c02853e2497a1fd91b777c35134c54951cfee9035779c75ffde08e3943d86b1a",
+    "prompts/prompt_sampler.txt": "63ccd755861fc35bbeb1151626cff1e8a775270d2bf57a8b20cbf1da5ec10bdc",
+    "prompts/dtpa.txt": "d59468daccbbbd2049b0d2ea82cf0a3cc8d6ec5f8c6a60e976746dfc43f1b203"
+  },
+  "modules": [
+    {
+      "rule_id": "vista.intent_preservation",
+      "trigger": "Always apply to a user request or an existing Video Prompt.",
+      "trigger_axis": "global.intent_fidelity",
+      "instruction": "Fully address the User Prompt, preserve its core actions and intent, and include only elements explicitly required or clearly implied. Do not add unnecessary competing events.",
+      "negative_terms": [],
+      "capability_scope": [
+        "prompt_alignment",
+        "context_fidelity"
+      ],
+      "expected_side_effects": [
+        "Monitor omitted explicit requirements and unsupported embellishment."
+      ]
+    },
+    {
+      "rule_id": "vista.duration_scene_budget",
+      "trigger": "The source explicitly specifies a duration, a single scene or take, or a multi-scene structure whose time allocation must be preserved.",
+      "trigger_axis": "temporal.duration_scene_budget",
+      "instruction": "Use a single coherent scene that fits the stated duration. Make the scene's script, events, and visual flow end within that duration; detail the requested action rather than adding transitions or unrelated events.",
+      "negative_terms": [
+        "abrupt cut",
+        "discontinuous motion"
+      ],
+      "capability_scope": [
+        "temporal_consistency",
+        "scene_transition"
+      ],
+      "expected_side_effects": [
+        "Monitor loss of explicitly requested multi-scene content."
+      ]
+    },
+    {
+      "rule_id": "vista.scene_components",
+      "trigger": "The source omits visual presentation details needed to render a coherent shot, such as environment, framing, or lighting.",
+      "trigger_axis": "presentation.renderability_completion",
+      "instruction": "Specify the central subjects, stable visible traits, initial screen positions, purposeful actions, the visual environment, one complementary camera plan, and lighting or mood when useful. Keep every component subordinate to the core message.",
+      "negative_terms": [
+        "framing drift"
+      ],
+      "capability_scope": [
+        "visual_fidelity",
+        "engagement",
+        "camera_focus"
+      ],
+      "expected_side_effects": [
+        "Monitor prompt bloat and invented details."
+      ]
+    },
+    {
+      "rule_id": "vista.motion_physics",
+      "trigger": "The source requests visible subject motion, a physical interaction or force, an object state change, or an explicitly static living subject that needs minimal non-state-changing motion cues.",
+      "trigger_axis": "motion.kinematics_physics",
+      "instruction": "The action timeline is the single highest-priority requirement of the prompt. State the action as the first element, before any setting, character description, or camera detail. If the model's prior bias defaults to a generic motion for the subject type (e.g., walking for a quadruped, swimming for a fish), explicitly forbid that default motion and require the unique action. If the model cannot generate the requested action without artifacts, simplify it to a single clear, continuous motion that the model can reliably generate, and include explicit timing and consistency constraints. Explicitly require that the action is visibly progressing in every single frame with no frozen frames, no long static pauses, no looping/repeating motion, and no still-image output. Translate the requested action into a detailed observable timeline: state initial pose and screen position, direction and path of travel, continuous changes in speed or orientation, physical contact and force, relevant environmental or material response, and a visible end state in order. Bind every phase to the same subject and keep the event budget feasible for the short clip. If the subject is in a resting/static state, require at least one continuous, visible motion cue throughout the clip (e.g., slow camera push-in, breathing, blinking, ear twitch) that does not alter the subject's pose or position; explicitly state the exact count and timing of each micro-action (e.g., 'exactly one blink in the final 1-2 seconds, no blinking before that'), and forbid any premature, repeated, or extra micro-actions. Explicitly require that these motion cues are clearly visible and not merely implied, and state that the subject must not appear frozen, statue-like, or as a still image. When the subject is stationary or the motion is minimal, explicitly require that the entire background is static with no moving objects (e.g., cars, people, animals, swaying trees) unless the source explicitly requests them. Provide a positive description of the background content (e.g., 'softly blurred garden with a brick wall, plants, and sky') and explicitly forbid the appearance of any moving elements. If the action involves spatial displacement (e.g., walking, running, flying), require that the subject's position changes relative to the background, with visible parallax or background shift, and include environmental interaction (e.g., footprints, grass bending, water ripples) to ground the motion physically. Critically, when the subject is supposed to move across the frame, explicitly require that the subject's body translates through the frame (i.e., its center of mass moves horizontally or vertically relative to the static background) and that each leg movement results in a corresponding forward displacement. Explicitly forbid the subject from performing leg movements that do not translate the body (e.g., 'walking in place', 'moonwalking', 'sliding' without actual position change). When the source specifies a direction of travel relative to the frame (e.g., 'left to right', 'toward the camera', 'across the screen'), explicitly define the camera-subject geometry: state whether the subject is seen in side profile (path parallel to the camera plane) or frontal (path toward/away from the camera), and require that the camera movement matches that geometry (e.g., lateral tracking for side profile, static or push-in for frontal). Explicitly forbid the opposite interpretation (e.g., if lateral movement is requested, forbid the subject approaching the lens; if frontal movement is requested, forbid side-scrolling). When the source specifies a directional force (e.g., a breeze, wind, or push), explicitly state that the force comes from a single, fixed source (e.g., 'a single off-screen fan at screen-left') and require that the resulting motion (e.g., hair, clothing, leaves) flows continuously in the specified direction for the entire clip, never reversing, oscillating, or becoming chaotic; explicitly forbid the motion from switching to the opposite direction or fanning out symmetrically at any point, and require that the final frame still shows the motion in the specified direction. Ensure transitions between action phases are gradual and physically plausible, with no abrupt jumps in speed, position, or posture. When the source specifies a camera movement or angle, explicitly restate that camera movement type and forbid any zoom, push-in, pull-out, or field-of-view change unless the source explicitly requests it; require that the subject's on-screen size remains roughly constant when the camera is purely translational. When the action involves an object interaction (e.g., lifting, gripping, drinking), explicitly state the object's weight and require that it remains in continuous contact with the subject or a supporting surface at all times, with no floating or teleporting. When the action involves a specific tool, vehicle, or equipment, explicitly name the exact equipment type and require that it is a single unbroken physical piece of the correct type, with no visually similar but incorrect alternatives. When the action involves consumption, transfer, breaking, or any transformation of an object's state (e.g., eating, drinking, pouring, filling, biting, breaking), explicitly describe the intermediate states of the object (e.g., whole, bitten, partially consumed, core, cracked, shattered) and require that the object's state changes gradually and continuously across frames, with no abrupt disappearance, appearance, or teleportation of parts. State the initial and final object state explicitly (e.g., 'plates start full and end partially emptied'). Critically, when the action creates, builds, or transforms an object or pattern (e.g., drawing, pouring, assembling, cooking), explicitly require that the initial frame shows the pre-action state (e.g., blank surface, empty container, unassembled parts) and that the final state (e.g., completed pattern, filled container, assembled structure) is only fully visible in the final frame; forbid the final state from appearing at the start or being present before the action completes. Add micro-movements to the subject (e.g., breathing, blinking, ear twitches, muscle contractions, weight shifts) that are visible and continuous throughout the clip, to counter the frozen-frame or still-image look. Ensure the action has a clear non-looping arc: a defined start state, a middle progression, and a distinct end state (e.g., stopping, arriving, completing the motion, partially consumed object), with no repetition of the same frames or cycle. If a trade-off is necessary, state the priority: the action must be visibly progressing and the object state must visibly change, even if other visual elements are simplified. For process-oriented actions (e.g., building, weaving, assembling, cooking, drawing), explicitly enumerate the sequential stages of the process (e.g., 'first X, then Y, then Z') and require that each stage is visibly completed before the next begins, with the subject continuously engaged in the action (e.g., manipulating materials, moving limbs) and the intermediate state of the object/structure remaining visible and attached throughout. Forbid the subject from performing unrelated locomotion (e.g., walking away) or remaining static while the object changes state. If the action is time-compressed, specify that the compression is achieved by accelerating the same continuous motion, not by cutting or skipping stages. For living subjects in motion, describe the motion in biomechanical terms (e.g., four-beat rhythm, full extension and retraction, visible suspension phase, natural head bob) rather than generic 'steady' or 'consistent' speed, and require that the subject's anatomy, markings, body shape, and the density of any generated effects remain stable and continuous from frame to frame, with no morphing, flickering, warping, or duplication, so the clip reads as a single continuous take. When the source specifies a demeanor, mood, or emotional state (e.g., 'menacing', 'calm', 'elegant', 'sad', 'smiling', 'cheerful'), explicitly restate that demeanor as a hard constraint and require that the subject's facial expressions and body language remain consistent with it throughout the clip. Define the expression mechanically where possible: specify the exact configuration of facial features that constitutes the expression (e.g., 'the upper teeth form a fixed upward-curved crescent; the lower jaw remains slightly below, keeping a narrow smile-like mouth gap no wider than a finger-width; never a large dark oral cavity'). Explicitly forbid any action or expression that contradicts the requested demeanor (e.g., if 'calm' is requested, forbid smiling, laughing, or exaggerated gestures; if 'menacing' is requested, forbid cheerful or welcoming behavior; if 'smiling' is requested, forbid yawning, screaming, snarling, grimacing, or opening the mouth wide). State that the subject must not perform any action that is not explicitly listed in the prompt, even if physically plausible, when such an action would undermine the requested mood or narrative. When the action involves a state change of an object (e.g., opening, closing, filling, emptying), explicitly require that the initial frame shows the object in its pre-action state (e.g., closed, empty, whole) and that the object's state changes gradually and continuously across frames, with the final state (e.g., open, full, broken) only fully visible at the end of the action; forbid the final state from appearing in the first frame or before the action begins. Add a temporal breakdown to the prompt when the action has multiple distinct phases (e.g., '0-2s: lift the closed fan, 2-4s: open the fan, 4-7s: wave the fan, 7-10s: rest'), and require that each phase is visibly completed before the next begins, with no skipping or merging of stages. When the action involves a sequence of distinct sub-actions (e.g., 'scoop feed, extend hand, goat eats from palm, then lower bucket'), explicitly require that the initial frame shows the first sub-action's starting state (e.g., bucket held at waist, hand empty) and that each subsequent sub-action is visibly initiated and completed in order, with no sub-action skipped or replaced by a different action (e.g., pouring feed instead of hand-feeding); forbid the final state of any sub-action (e.g., bucket on ground, goats eating from bucket) from appearing before that sub-action is reached in the sequence. When the action is a sequence of subtle micro-actions (e.g., blinking, breathing, slight head turn), explicitly state the exact count and timing of each micro-action (e.g., 'exactly one blink in the final 1-2 seconds, no blinking before that'), and forbid any premature, repeated, or extra micro-actions that would break the intended choreography. If the action involves a hand or limb interacting with an object (e.g., adjusting glasses), explicitly require that the limb remains a coherent, anatomically correct shape in every frame, with no distortion, blurring, or teleportation during entry or exit, and that the final pose matches the prompt's end state (e.g., 'hand lowered to side', not 'hand pointing up'). Establish a priority hierarchy: the action progression and object state change are mandatory; secondary visual details (e.g., background movement, texture details) are enhancements that must not compromise the primary action.",
+      "negative_terms": [
+        "frozen frame",
+        "static image",
+        "morphing",
+        "warping",
+        "flickering",
+        "identity switching",
+        "abrupt cut",
+        "looping motion"
+      ],
+      "capability_scope": [
+        "motions_and_dynamics",
+        "physical_commonsense"
+      ],
+      "expected_side_effects": [
+        "Over-constraining the pose or motion may lead to static or simplified outputs if the model cannot generate the exact action; requires careful balancing with micro-movements.",
+        "Explicit simplifying of complex motion may reduce visual variety but improve temporal consistency and realism.",
+        "Forbidding default motions may cause the model to avoid the subject entirely if the constraint is too strict; ensure the unique action is physically plausible.",
+        "Requiring exact timing of micro-movements and static backgrounds may restrict creative variation and risk unnatural choreography if the model cannot follow the precise schedule."
+      ]
+    },
+    {
+      "rule_id": "vista.frame_exit_reentry",
+      "trigger": "A requested subject leaves the frame and later returns, crosses a frame boundary, or temporarily becomes occluded during a continuous action.",
+      "trigger_axis": "continuity.frame_boundary",
+      "instruction": "State the exit edge or occluder, preserve the subject's appearance and direction of travel while off-screen, and specify the physically consistent re-entry edge, timing, and resumed motion. Do not invent a re-entry when the source action ends off-screen.",
+      "negative_terms": [
+        "identity switching",
+        "abrupt appearance",
+        "sudden disappearance",
+        "reversed motion"
+      ],
+      "capability_scope": [
+        "temporal_consistency",
+        "motions_and_dynamics"
+      ],
+      "expected_side_effects": [
+        "Monitor unnecessary re-entry and excessive trajectory detail."
+      ]
+    },
+    {
+      "rule_id": "vista.identity_count_guard",
+      "trigger": "The source explicitly requires an exact entity count, multiple persistent subjects, a specifically named person or individual, a specific species or breed, or explicitly emphasizes one persistent object as unique. Ordinary singular articles such as 'a' or 'an' do not activate this rule by themselves.",
+      "trigger_axis": "entity.identity_cardinality",
+      "instruction": "State the exact count of each subject type as the first mandatory sentence and repeat it in the final clause. Give each persistent subject or object a stable role, appearance cue (e.g., color, markings, body shape, fur texture), and separate screen position when needed for tracking. When a specific species, breed, or type is named, explicitly restate that exact identity and its distinguishing visual features, requiring that the generated subjects match those features exactly. Additionally, explicitly name the most visually similar incorrect alternative species/breed and require that the generated subjects do NOT exhibit that alternative's distinguishing features. When the source names a real or fictional individual with distinctive recognizable features, explicitly require that the subject's facial features, hairstyle, body proportions, and other distinctive physical characteristics match that individual's recognizable appearance, and explicitly forbid the subject from being rendered as a generic, idealized, or different person; name the most likely incorrect substitution and require that the subject does NOT resemble that alternative. Explicitly forbid the subject from being rendered as a human wearing a mask, costume, or prosthetic of that species, and forbid any animal head or face from appearing on a human body or vice versa; require that the subject is a full-bodied, anatomically coherent animal of the exact named species with natural fur, skin, and body proportions. Preserve those identities and counts through every action phase, explicitly requiring that the same subjects remain present in every frame with no duplication, disappearance, appearance from nowhere, morphing into another entity, face swapping, mask swaps, costume changes, or any transformation of one character into another. When multiple subjects are present, explicitly require that each subject's body outline, head, ears, and face remain distinct and fully visible, with no subject hidden under another or merging into a single mass. When the source specifies a spatial relationship between subjects (e.g., distance, separation, or containment), explicitly state that the subjects must maintain that relationship throughout the clip, never touching, overlapping, clipping through, or entering each other's space, and forbid any subject from approaching closer than the specified distance. When the source specifies a positional layout (e.g., 'third from the left', 'in the center', 'on the right side'), explicitly restate that layout as a hard spatial constraint and require that the camera framing keeps every subject fully visible in that exact arrangement for the entire clip; explicitly forbid any camera zoom, push-in, pull-out, pan, tilt, or reframing that would crop, obscure, or reposition any subject relative to the specified layout. When a single object is specified, explicitly state that it remains one unbroken physical piece with no splitting, duplication, or morphing during any contact, grip, or motion phase; explicitly require that exactly one such object exists in the entire video, and that no similar-looking objects, decorations, or themed items appear anywhere in the scene, including on other objects or in the background. When the source specifies a single object that must carry or contain multiple subjects (e.g., one bicycle with two riders, one vehicle with multiple passengers), explicitly state that the object is a single unbroken physical piece and that all subjects are already positioned on or in it in the first frame, remaining there in every frame until the final frame; explicitly forbid the generation of multiple instances of that object, forbid any subject from appearing on a separate object, and forbid any subject from entering the frame from the side or from behind an obstacle. If occlusion occurs, specify that the occluded subject re-emerges continuously from the same direction. Add explicit negative constraints against count drift, missing subjects, identity switching, overlapping bodies, extra subjects appearing beyond the specified count, species substitution, generic-subject substitution, and duplicate objects. Require that the subject count and identity be explicitly verified at the start, middle, and end of the clip, and that no new subjects enter the frame from off-screen or from behind existing subjects.",
+      "negative_terms": [
+        "extra subjects",
+        "missing subjects",
+        "identity switching",
+        "count drift",
+        "species substitution",
+        "generic model",
+        "duplicate object",
+        "positional mismatch"
+      ],
+      "capability_scope": [
+        "temporal_consistency",
+        "prompt_alignment"
+      ],
+      "expected_side_effects": [
+        "May over-constrain stylized or animated content where masks/costumes are intentional",
+        "May reduce creative interpretation of species representation",
+        "May reduce compositional variety by over-constraining subject placement",
+        "May increase prompt length, potentially diluting attention on other aspects",
+        "May over-constrain camera work even when slight movement would be acceptable",
+        "May cause the model to prioritize count/identity over other aspects like motion quality"
+      ]
+    },
+    {
+      "rule_id": "vista.visual_only_delivery",
+      "trigger": "Audio, dialogue, narration, captions, subtitles, or visible text are not explicitly requested.",
+      "trigger_axis": "delivery.text_audio",
+      "instruction": "Keep the prompt visual-only. Add no dialogue, narration, voice-over, music, sound effects, captions, subtitles, logos, or other visible text.",
+      "negative_terms": [],
+      "capability_scope": [
+        "visual_safety",
+        "text_overlay"
+      ],
+      "expected_side_effects": [
+        "Monitor removal of explicitly requested visible text or audio."
+      ]
+    }
+  ],
+  "last_promotion": {
+    "timestamp": "2026-08-05T13:20:00.130142+00:00",
+    "rule_id": "vista.identity_count_guard",
+    "operation": "replace",
+    "heldout_report": {
+      "passed": true,
+      "guard_noninferior": true,
+      "prompt_count": 3,
+      "candidate_wins": 1,
+      "incumbent_wins": 0,
+      "ties": 2,
+      "allowed_losses": 0,
+      "macro_delta": 0.3333333333333333,
+      "target_delta": 0.3333333333333333,
+      "records": [
+        {
+          "corpus_index": 43,
+          "prompt": "A dog chews on a bone, gnawing at it with its teeth.",
+          "seed": 1900000043,
+          "incumbent_prompt": "A medium-sized dog sits on a grassy lawn, holding a large bone between its front paws. The dog tilts its head down and bites down on the bone with its teeth, then repeatedly gnaws and chews with visible jaw movements, shifting its grip slightly as the bone stays firmly in place. The scene remains static with the dog centered in frame, natural daylight, shallow depth of field, continuous close-up shot of the dog's head and the bone, ending with the dog still chewing steadily.",
+          "incumbent_negative_prompt": "abrupt cut, discontinuous motion, sliding motion, trajectory drift, broken contact, impossible deformation, duplicated subjects, framing drift",
+          "candidate_prompt": "A single dog sits on the ground in a simple indoor setting, holding a bone with both front paws. The dog tilts its head down and opens its mouth, clamping its teeth onto the bone, then repeatedly gnaws and chews with visible jaw movements, shifting its grip slightly as the bone stays intact in its mouth. The dog's head bobs gently with each chew, and the scene remains focused on the dog and the bone until the clip ends.",
+          "candidate_negative_prompt": "abrupt cut, discontinuous motion, broken contact, impossible deformation, duplicated subjects, object splitting, framing drift, identity switching",
+          "incumbent_video": "outputs/evalcrafter_posneg_v2_waves/wave_001/promotion/p0043/incumbent.mp4",
+          "candidate_video": "outputs/evalcrafter_posneg_v2_waves/wave_001/promotion/p0043/candidate.mp4",
+          "outcome": "tie",
+          "pairwise": {
+            "video_a_id": "incumbent",
+            "video_b_id": "candidate",
+            "decision": "COMPARABLE",
+            "swapped_decision": "A_BETTER",
+            "winner_id": "candidate",
+            "raw_forward": "```json\n{\n  \"Decision\": \"COMPARABLE\",\n  \"WeightedScoreA\": 0.5,\n  \"WeightedScoreB\": 0.5,\n  \"Rationale\": \"Both videos suffer from significant AI-generated artifacts and fail to deliver a realistic chewing scene. Video A features a bone that morphs and shape-shifts unnaturally between frames, violating object permanence and physical consistency. Video B exhibits erratic, glitchy head movements and heavy motion blur towards the end, breaking immersion. Additionally, both videos use a cartoonish, toy-like bone instead of a realistic one, and neither captures a natural, vigorous gnawing motion. Due to the comparable severity of their respective flaws, neither video is distinctly better.\"\n}\n```",
+            "raw_swapped": "```json\n{\n  \"Decision\": \"A_BETTER\",\n  \"WeightedScoreA\": 1.0,\n  \"WeightedScoreB\": 0.0,\n  \"Rationale\": \"Both videos suffer from AI artifacts and feature unrealistic, cartoon-like bones. However, Video B exhibits severe object morphing and shape-shifting of the bone between frames, which fundamentally violates object permanence and physical commonsense. Video A's flaws are primarily limited to motion blur and jerky head movements towards the end, making it slightly more coherent and visually stable than Video B.\"\n}\n```"
+          }
+        },
+        {
+          "corpus_index": 55,
+          "prompt": "five aliens in a forest",
+          "seed": 1900000055,
+          "incumbent_prompt": "Five slender, green-skinned aliens with large dark eyes and small antennae stand in a sunlit forest clearing, surrounded by tall trees and ferns. They are arranged in a loose group, facing the camera, with the tallest alien in the center and the other four slightly spread out on either side. They slowly turn their heads in unison to look toward the right side of the frame, then take a few cautious steps forward together, their bare feet pressing softly into the mossy ground. As they move, the ferns gently sway from their passing, and dappled sunlight flickers across their smooth skin. They stop after a few steps, standing still, blinking slowly, with the forest remaining calm around them.",
+          "incumbent_negative_prompt": "duplicated subjects, missing subjects, subject fusion, identity switching, count drift, framing drift, discontinuous motion, abrupt cut",
+          "candidate_prompt": "Five distinct aliens stand in a sunlit forest clearing, surrounded by tall green trees and ferns. Each alien has a unique appearance: one tall and slender with blue skin, one short and round with green skin, one with purple scales and large eyes, one with orange skin and antennae, and one with gray skin and long limbs. They stand in a loose semicircle facing the camera, initially still. They begin to slowly turn their heads and look at one another, then raise their arms in gentle, curious gestures, stepping cautiously forward as if exploring the forest. Their movements are smooth and deliberate, with no sudden jumps. The camera holds a steady medium-wide shot, capturing all five aliens and the surrounding foliage. Soft dappled light filters through the canopy, casting shifting shadows on the ground. The scene remains calm and continuous, with the aliens continuing to move slowly among the trees, their forms fully visible and consistent throughout.",
+          "candidate_negative_prompt": "duplicated subjects, missing subjects, subject fusion, identity switching, count drift, abrupt cut, discontinuous motion, framing drift",
+          "incumbent_video": "outputs/evalcrafter_posneg_v2_waves/wave_001/promotion/p0055/incumbent.mp4",
+          "candidate_video": "outputs/evalcrafter_posneg_v2_waves/wave_001/promotion/p0055/candidate.mp4",
+          "outcome": "tie",
+          "pairwise": null,
+          "evaluation_error": {
+            "type": "dashscope_data_inspection_failed",
+            "message": "Video evaluation was rejected by provider content inspection; counted as neutral."
+          }
+        },
+        {
+          "corpus_index": 76,
+          "prompt": "A farmer tends to a flock of twenty sheep, shearing their wool and counting them to make sure none are missing.",
+          "seed": 1900000076,
+          "incumbent_prompt": "A farmer stands in a sunlit grassy pasture, facing a flock of twenty white sheep gathered loosely in the foreground. The farmer kneels beside one sheep, holding a pair of metal shears, and begins clipping thick wool from the sheep's back, revealing the pale skin beneath as the wool falls in soft clumps onto the grass. The sheep stands still, its head slightly lowered. After finishing, the farmer stands and walks slowly among the flock, pointing a finger and counting each sheep one by one, moving from left to right across the frame. The sheep mill gently, some grazing, as the farmer completes the count and nods, the entire flock remaining visible in the frame.",
+          "incumbent_negative_prompt": "abrupt cut, discontinuous motion, framing drift, duplicated subjects, missing subjects, subject fusion, count drift, impossible deformation",
+          "candidate_prompt": "A farmer stands in a sunlit grassy pasture, facing a flock of twenty white sheep gathered loosely in the foreground. He kneels beside one sheep, holding a pair of metal shears, and clips away a thick layer of wool from its back, the fleece peeling off in one continuous sheet and falling onto the grass. The sheep stands still, its body slightly shifting as the shears move along its side. After finishing, the farmer stands, steps back, and begins counting the sheep, his head turning and finger pointing as he scans the flock from left to right, the sheep milling gently in place. The camera holds a medium-wide shot, stable, with soft daylight and a calm rural backdrop of rolling fields and a wooden fence.",
+          "candidate_negative_prompt": "abrupt cut, discontinuous motion, framing drift, duplicated subjects, missing subjects, identity switching, count drift, object morphing",
+          "incumbent_video": "outputs/evalcrafter_posneg_v2_waves/wave_001/promotion/p0076/incumbent.mp4",
+          "candidate_video": "outputs/evalcrafter_posneg_v2_waves/wave_001/promotion/p0076/candidate.mp4",
+          "outcome": "candidate_win",
+          "pairwise": {
+            "video_a_id": "incumbent",
+            "video_b_id": "candidate",
+            "decision": "B_BETTER",
+            "swapped_decision": "A_BETTER",
+            "winner_id": "candidate",
+            "raw_forward": "```json\n{\n  \"Decision\": \"B_BETTER\",\n  \"WeightedScoreA\": 0.25,\n  \"WeightedScoreB\": 0.75,\n  \"Rationale\": \"Both videos fail to accurately depict the prompt, suffering from severe AI artifacts and unnatural actions. However, Video A features grotesque morphing of the sheep (extra eyes, merged limbs) making it visually unsettling and creepy. Video B, while depicting a nonsensical shearing action (pulling a sheet instead of clipping) and lacking a clear counting sequence, is less visually disturbing and maintains slightly better overall object coherence compared to the severe distortions in Video A.\"\n}\n```",
+            "raw_swapped": "```json\n{\n  \"Decision\": \"A_BETTER\",\n  \"WeightedScoreA\": 0.875,\n  \"WeightedScoreB\": 0.125,\n  \"Rationale\": \"Video A is significantly better than Video B. While both videos fail to accurately depict the shearing and counting actions requested in the prompt, Video B suffers from severe AI artifacts, including grotesque morphing of the sheep's faces and bodies, merged limbs, and erratic movements. Video A, although it nonsensically depicts shearing as pulling a white sheet and lacks clear counting, maintains better object permanence and is less visually unsettling than the heavily distorted subjects in Video B.\"\n}\n```"
+          },
+          "evaluation_error": null
+        }
+      ],
+      "complete": true
+    }
+  },
+  "last_batch_update": {
+    "timestamp": "2026-08-09T20:33:35.446594+00:00",
+    "batch_size": 4,
+    "evidence_episode_ids": [
+      "1fe740b56828",
+      "75a9e2539f50",
+      "75cd1351d06d",
+      "f8a2b11883e6"
+    ],
+    "rule_id": "vista.motion_physics",
+    "reasoning": "All four patches target failures in realistic motion generation: spatial displacement (walking-in-place, moonwalking), missing parallax, and background artifacts. Patches 1fe740b56828 and 75cd1351d06d independently emphasize explicit forbidding of non-translating leg motion and requiring background statics for stationary subjects. Patches 75cd1351d06d and f8a2b11883e6 both add strict micro-movement timing (exact count/interval) to counter frozen frames. Patch 75a9e2539f50 reinforces grounding and physics constraints. I synthesize these into a single instruction update that adds the critical spatial-translation requirement, replaces the static-subject paragraph with exact timing and static-background enforcement, and preserves the existing negative terms (which are broad and already cover common artifacts). The trigger and capability_scope remain unchanged because no routing evidence is provided.",
+    "trigger_changed": false,
+    "trigger_support_count": 0,
+    "trigger_validation": {
+      "valid": true,
+      "changed": false,
+      "max_conditional_trigger_jaccard": 0.04,
+      "overlaps": [
+        {
+          "rule_id": "vista.duration_scene_budget",
+          "jaccard": 0.0
+        },
+        {
+          "rule_id": "vista.scene_components",
+          "jaccard": 0.0
+        },
+        {
+          "rule_id": "vista.frame_exit_reentry",
+          "jaccard": 0.0345
+        },
+        {
+          "rule_id": "vista.identity_count_guard",
+          "jaccard": 0.0227
+        },
+        {
+          "rule_id": "vista.visual_only_delivery",
+          "jaccard": 0.04
+        }
+      ],
+      "errors": []
+    }
+  }
+}

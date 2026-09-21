@@ -1,0 +1,32 @@
+# Python and test caches.
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local secrets and credentials. Never commit API keys.
+api_keys/
+*.key
+.env
+.env.*
+
+# Generated run artifacts.
+outputs/
+
+# Generated media and logs.
+*.mp4
+*.partial_started
+*.log
+*.lock
+
+# Local benchmark checkouts / caches that must stay external.
+experiments/benchmark_eval/official/
+experiments/benchmark_eval/outputs/
+experiments/benchmark_eval/cache/
+
+# Editor / OS noise.
+.DS_Store
+.idea/
+.vscode/

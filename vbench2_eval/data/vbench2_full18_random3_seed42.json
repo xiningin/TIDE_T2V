@@ -1,0 +1,418 @@
+{
+  "name": "TIDE VBench-2.0 Full-18 Random-3 Evaluation",
+  "version": 1,
+  "description": "覆盖 VBench-2.0 全部 18 个细粒度维度；每个维度从官方 prompt 列表中使用固定随机种子 42 无放回抽取 3 条，共 54 条。该集合用于快速、可复现的全维诊断，不可与官方完整榜单总分直接比较。",
+  "source_root": "/path/to/VBench-2.0",
+  "protocol": {
+    "total_dimensions": 18,
+    "prompts_per_dimension": 3,
+    "total_prompts": 54,
+    "selection": "per-dimension uniform sampling without replacement",
+    "random_seed": 42,
+    "smoke_test_samples_per_prompt": 1,
+    "recommended_comparison_samples_per_prompt": 3,
+    "official_diversity_samples_per_prompt": 20,
+    "generation_text_field": "canonical_prompt or PromptRewriter output",
+    "evaluation_and_filename_field": "canonical_prompt",
+    "filename_rule": "{canonical_prompt[:180]}-{seed_index}.mp4",
+    "note": "三个 arm 始终使用 canonical_prompt 进行官方元数据匹配；Diversity 每条 prompt 至少生成 20 个样本。"
+  },
+  "dimensions": [
+    {
+      "dimension": "Camera_Motion",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 108 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-001",
+          "source_line": 19,
+          "canonical_prompt": "Mount Fuji, zoom in."
+        },
+        {
+          "id": "vbench2-full18-r3-002",
+          "source_line": 80,
+          "canonical_prompt": "The camera orbits around in a clockwise direction. Machu Picchu."
+        },
+        {
+          "id": "vbench2-full18-r3-003",
+          "source_line": 85,
+          "canonical_prompt": "Forbidden City, tilt down."
+        }
+      ]
+    },
+    {
+      "dimension": "Complex_Landscape",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 30 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-004",
+          "source_line": 4,
+          "canonical_prompt": "The camera starts at a tranquil coastline, where the waves gently crash against the rocks, the salty sea breeze fills the air, and the atmosphere feels fresh and alive. As the camera moves forward, the surface of the water glistens with golden light from the setting sun, the sound of the waves becoming more distinct as the tide retreats, revealing a moist sandy shore. The scene shifts to the beach, where a few seagulls peck at the sand, occasionally flying up and breaking the stillness of the sky. The sun slowly sinks below the horizon, painting the sky in vibrant shades of orange and red, as the golden light on the water fades, and the waves begin to intensify. Finally, the camera pulls back, and the entire coastline fades into twilight, with the sea and sky blending together in a serene, solitary embrace."
+        },
+        {
+          "id": "vbench2-full18-r3-005",
+          "source_line": 15,
+          "canonical_prompt": "The camera begins under the bright moonlight, casting its glow over a silent swamp, surrounded by darkness, with only the moonlight and the occasional flicker of fireflies illuminating the night. The camera slowly descends, revealing the mist drifting over the swamp, with the water's surface covered in floating lily pads and wet grass. Occasionally, a frog leaps into the water, creating faint ripples. As the camera moves forward, fireflies dance in the air, their tiny green lights twinkling like stars, adding life to the dark swamp. The camera shifts to the distant trees, where a few night birds fly past, their low calls echoing through the air. Finally, the camera pulls back, showing the entire swamp under the moonlight, with the water shimmering and fireflies continuing to flicker in the air, creating a mysterious, tranquil scene."
+        },
+        {
+          "id": "vbench2-full18-r3-006",
+          "source_line": 27,
+          "canonical_prompt": "The camera starts at a distance, showing an abandoned city with empty streets, shattered glass windows in high-rise buildings, and winds blowing dust and discarded advertisements. The neon lights flicker on, casting a cold glow in the empty night sky. The camera moves downward, revealing the vacant streets, where puddles reflect the neon lights, and the wet pavement gives the city a desolate feel. Next, the camera moves into a dimly lit alley, where broken store signs and walls covered in graffiti and grime add to the sense of decay. The camera continues moving forward, capturing the faint creaking of an advertisement board swaying in the wind. As the camera shifts toward the horizon, a massive abandoned skyscraper looms, its once-glorious facade now faded, with dim blue light leaking from the broken elevator windows. Finally, the camera pulls back, showing the entire city in the dark of night, lifeless and abandoned, as if time has stopped here."
+        }
+      ]
+    },
+    {
+      "dimension": "Complex_Plot",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 60 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-007",
+          "source_line": 1,
+          "canonical_prompt": "The race began, and the first runner quickly took off, leading the other teams. Everyone was focused on his performance. During the baton handoff of the first runner, Team A made a slight mistake, and the baton nearly fell. Despite this, the runner quickly passed it to the second runner. The second runner showed great determination and chased hard, finally overtaking Team B on the bend. However, due to the earlier mistake, Team A's lead was not significant. During the third runner's handoff, the runner from Team A nervously accelerated and managed to maintain the lead, but Team C quickly caught up thanks to their excellent pace control. During the fourth runner's handoff, the final sprint became crucial. The Team A runner started to accelerate in the second-to-last turn and, with a burst of strength, successfully widened the gap, steadily running toward the finish line and winning the race."
+        },
+        {
+          "id": "vbench2-full18-r3-008",
+          "source_line": 12,
+          "canonical_prompt": "In an ancient magical kingdom, a young sorcerer was assigned the task of finding five legendary magic crystals. First, he arrived at a volcano, defeated the volcanic beast, and earned the flame crystal. He then traveled to the distant snow kingdom, using wisdom and courage to earn the snow crystal. Next, he entered the celestial tower, solved the starry riddle, and obtained the star crystal. The fourth stop took him to a mysterious forest, where he rescued a trapped elf and obtained the life crystal. Finally, he crossed the desert, enduring harsh conditions to earn the earth crystal. The sorcerer combined all five crystals, awakened the kingdom's magical power, and restored peace and prosperity."
+        },
+        {
+          "id": "vbench2-full18-r3-009",
+          "source_line": 46,
+          "canonical_prompt": "In an ancient tomb deep in the mountains, the tomb raiders discovered a massive dragon bone structure. Legend had it that the skeleton belonged to an ancient dragon god. Captain Old Li led his team into the tomb, seeking to uncover the secret of the dragon bones. When they attempted to remove a part of the bones, a strange sound suddenly echoed, and the tomb’s traps began to activate. The passage grew more complex, with each step forward bringing deadly new dangers. Eventually, Old Li discovered that the dragon bones were not mere remains, but a seal, once used to imprison an evil force. To avoid releasing this dangerous power, they decided to leave, but it was already too late."
+        }
+      ]
+    },
+    {
+      "dimension": "Composition",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 53 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-010",
+          "source_line": 3,
+          "canonical_prompt": "A wolf with the body of a horse, galloping across a vast plains with wild abandon."
+        },
+        {
+          "id": "vbench2-full18-r3-011",
+          "source_line": 20,
+          "canonical_prompt": "A whale with the horns of a ram, the wings of an eagle, and the skin of an octopus, able to both soar through the skies and dive deep into the ocean."
+        },
+        {
+          "id": "vbench2-full18-r3-012",
+          "source_line": 21,
+          "canonical_prompt": "A panda with the antlers of a deer, the body of a lion, the tail of a monkey, and the wings of a bat, a majestic creature roaming forests and skies."
+        }
+      ]
+    },
+    {
+      "dimension": "Diversity",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 10 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-013",
+          "source_line": 2,
+          "canonical_prompt": "A river changes from blue to brown."
+        },
+        {
+          "id": "vbench2-full18-r3-014",
+          "source_line": 3,
+          "canonical_prompt": "A dog is on the left of an apple, then the dog runs to the front of the apple."
+        },
+        {
+          "id": "vbench2-full18-r3-015",
+          "source_line": 5,
+          "canonical_prompt": "The camera circles around. Garden."
+        }
+      ]
+    },
+    {
+      "dimension": "Dynamic_Attribute",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 91 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-016",
+          "source_line": 28,
+          "canonical_prompt": "A cloud changes from white to black."
+        },
+        {
+          "id": "vbench2-full18-r3-017",
+          "source_line": 54,
+          "canonical_prompt": "A tiger changes from small to big."
+        },
+        {
+          "id": "vbench2-full18-r3-018",
+          "source_line": 88,
+          "canonical_prompt": "The plastic door transformed into a wooden door."
+        }
+      ]
+    },
+    {
+      "dimension": "Dynamic_Spatial_Relationship",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 69 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-019",
+          "source_line": 7,
+          "canonical_prompt": "A cat is on the left of a chair, then the cat runs to the front of the chair."
+        },
+        {
+          "id": "vbench2-full18-r3-020",
+          "source_line": 8,
+          "canonical_prompt": "A cat is on the right of a box, then the cat runs to the left of the box."
+        },
+        {
+          "id": "vbench2-full18-r3-021",
+          "source_line": 12,
+          "canonical_prompt": "A cat is on the table, then the cat runs to the left of the table."
+        }
+      ]
+    },
+    {
+      "dimension": "Human_Anatomy",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 120 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-022",
+          "source_line": 21,
+          "canonical_prompt": "A man is playing badminton."
+        },
+        {
+          "id": "vbench2-full18-r3-023",
+          "source_line": 64,
+          "canonical_prompt": "A person is texting, then they suddenly get up and start vacuuming the floor."
+        },
+        {
+          "id": "vbench2-full18-r3-024",
+          "source_line": 84,
+          "canonical_prompt": "A person is reading a magazine, then they suddenly get up and start organizing the closet."
+        }
+      ]
+    },
+    {
+      "dimension": "Human_Clothes",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 75 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-025",
+          "source_line": 46,
+          "canonical_prompt": "A person is watching a movie, then they suddenly get up and start sweeping the porch."
+        },
+        {
+          "id": "vbench2-full18-r3-026",
+          "source_line": 59,
+          "canonical_prompt": "A person is checking their email, then they suddenly start making a phone call."
+        },
+        {
+          "id": "vbench2-full18-r3-027",
+          "source_line": 75,
+          "canonical_prompt": "A person is listening to music, then they suddenly start washing the dishes."
+        }
+      ]
+    },
+    {
+      "dimension": "Human_Identity",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 46 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-028",
+          "source_line": 10,
+          "canonical_prompt": "A woman is playing ping-pong."
+        },
+        {
+          "id": "vbench2-full18-r3-029",
+          "source_line": 35,
+          "canonical_prompt": "A person is checking their email, then they suddenly start making a phone call."
+        },
+        {
+          "id": "vbench2-full18-r3-030",
+          "source_line": 38,
+          "canonical_prompt": "A person is folding clothes, then they suddenly get up and start reading a book."
+        }
+      ]
+    },
+    {
+      "dimension": "Human_Interaction",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 100 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-031",
+          "source_line": 19,
+          "canonical_prompt": "Two people are helping each other lift a large box."
+        },
+        {
+          "id": "vbench2-full18-r3-032",
+          "source_line": 38,
+          "canonical_prompt": "One person pushes another person in a wheelchair."
+        },
+        {
+          "id": "vbench2-full18-r3-033",
+          "source_line": 45,
+          "canonical_prompt": "Two people are packing a suitcase together."
+        }
+      ]
+    },
+    {
+      "dimension": "Instance_Preservation",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 57 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-034",
+          "source_line": 8,
+          "canonical_prompt": "A beige tiger is running."
+        },
+        {
+          "id": "vbench2-full18-r3-035",
+          "source_line": 35,
+          "canonical_prompt": "A man is playing basketball."
+        },
+        {
+          "id": "vbench2-full18-r3-036",
+          "source_line": 36,
+          "canonical_prompt": "Two men are playing basketball."
+        }
+      ]
+    },
+    {
+      "dimension": "Material",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 50 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-037",
+          "source_line": 11,
+          "canonical_prompt": "A piece of iron is ignited, emitting a vivid and unique flame as it burns steadily."
+        },
+        {
+          "id": "vbench2-full18-r3-038",
+          "source_line": 31,
+          "canonical_prompt": "A small burning piece of wood was thrown into a pile of dry corn stalks."
+        },
+        {
+          "id": "vbench2-full18-r3-039",
+          "source_line": 32,
+          "canonical_prompt": "A timelapse captures the transformation as sodium hydroxide is added to a glass of red litmus solution."
+        }
+      ]
+    },
+    {
+      "dimension": "Mechanics",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 57 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-040",
+          "source_line": 7,
+          "canonical_prompt": "A container of whipped cream is opened in the space station, and the foam slowly expands in all directions."
+        },
+        {
+          "id": "vbench2-full18-r3-041",
+          "source_line": 38,
+          "canonical_prompt": "A soft rubber duck is tossed onto the floor, showing its energetic bounce as it strikes the surface."
+        },
+        {
+          "id": "vbench2-full18-r3-042",
+          "source_line": 41,
+          "canonical_prompt": "A small rubber beach ball is thrown towards the ground, showing the ball's high bounce after impact with the surface."
+        }
+      ]
+    },
+    {
+      "dimension": "Motion_Order_Understanding",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 99 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-043",
+          "source_line": 1,
+          "canonical_prompt": "A person is sitting on the couch, then suddenly they get up and start sweeping the floor."
+        },
+        {
+          "id": "vbench2-full18-r3-044",
+          "source_line": 43,
+          "canonical_prompt": "A dog is sitting by the door, then it suddenly starts running in circles."
+        },
+        {
+          "id": "vbench2-full18-r3-045",
+          "source_line": 50,
+          "canonical_prompt": "A person is sitting at the kitchen table, then they suddenly get up and start doing the dishes."
+        }
+      ]
+    },
+    {
+      "dimension": "Motion_Rationality",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 58 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-046",
+          "source_line": 24,
+          "canonical_prompt": "A person is rolling sushi."
+        },
+        {
+          "id": "vbench2-full18-r3-047",
+          "source_line": 32,
+          "canonical_prompt": "A person is walking down the street."
+        },
+        {
+          "id": "vbench2-full18-r3-048",
+          "source_line": 54,
+          "canonical_prompt": "A person is opening the curtains."
+        }
+      ]
+    },
+    {
+      "dimension": "Multi-View_Consistency",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 97 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-049",
+          "source_line": 8,
+          "canonical_prompt": "The camera orbits around. Taj Mahal, the camera circles around."
+        },
+        {
+          "id": "vbench2-full18-r3-050",
+          "source_line": 68,
+          "canonical_prompt": "The camera orbits around. Bottle, the camera circles around."
+        },
+        {
+          "id": "vbench2-full18-r3-051",
+          "source_line": 91,
+          "canonical_prompt": "The camera orbits around. Fern, the camera circles around."
+        }
+      ]
+    },
+    {
+      "dimension": "Thermotics",
+      "prompt_count": 3,
+      "selection_rationale": "使用固定随机种子 42，从该维度官方 50 条 prompt 中无放回随机抽取 3 条。",
+      "prompts": [
+        {
+          "id": "vbench2-full18-r3-052",
+          "source_line": 24,
+          "canonical_prompt": "A timelapse captures the transformation of naphthalene as it is exposed to a temperature of 50°C."
+        },
+        {
+          "id": "vbench2-full18-r3-053",
+          "source_line": 26,
+          "canonical_prompt": "A timelapse captures the transformation of camphor as it is exposed to a temperature of 120°C."
+        },
+        {
+          "id": "vbench2-full18-r3-054",
+          "source_line": 42,
+          "canonical_prompt": "A timelapse captures the transformation of fruit juice in a saucepan as the temperature reaches 130°C."
+        }
+      ]
+    }
+  ]
+}

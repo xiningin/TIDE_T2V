@@ -1,0 +1,7 @@
+# Random-trigger ablation. Set random_activation_count to the measured Full-skill
+# mean (see scripts/measure_activation_mean.py) before launching training.
+skill_learning:
+  activation_mode: random
+  random_activation_count: null
+  random_activation_seed: 42
+  freeze_negative_prompt: false

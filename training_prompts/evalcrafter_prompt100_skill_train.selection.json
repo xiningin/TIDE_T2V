@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "source_path": "training_prompts/evalcrafter_prompt700.txt",
+  "source_sha256": "2b54c2786af539df302dee7270d5d82658652d1531c0814c9e4c32f02ff1c8fc",
+  "output_path": "training_prompts/evalcrafter_prompt100_skill_train.txt",
+  "output_sha256": "0bcd0be07e5bc412b96a102fe30137ddbeb7037d613b6777d5fa526615b9b910",
+  "selection_purpose": "Balanced TIDE rewrite-Skill training subset for short text-to-video prompts.",
+  "selection_criteria": [
+    "Keep prompts with coherent visible content and outcomes that can be judged from a short video.",
+    "Cover identity/count persistence, motion/physics, environmental dynamics, camera/presentation, and scene completion.",
+    "Exclude exact duplicates, text-rendering-only tasks, audio-only tasks, long celebrity-expression blocks, heavy artist-style stacking, and severely ambiguous fragments.",
+    "Preserve source wording; normalize only leading/trailing and repeated whitespace.",
+    "Interleave categories to reduce long runs of near-identical prompt types."
+  ],
+  "selected_count": 100,
+  "category_counts": {
+    "identity_count": 25,
+    "motion_physics": 35,
+    "environmental_dynamics": 10,
+    "camera_presentation": 15,
+    "scene_completion": 15
+  },
+  "source_lines_by_category": {
+    "identity_count": [37, 38, 39, 72, 75, 78, 79, 80, 94, 117, 118, 119, 121, 122, 125, 126, 127, 145, 208, 605, 610, 246, 460, 608, 616],
+    "motion_physics": [20, 29, 35, 42, 43, 44, 45, 115, 116, 135, 142, 155, 179, 201, 202, 207, 213, 214, 233, 234, 235, 236, 237, 238, 515, 517, 518, 524, 525, 526, 528, 531, 534, 577, 578],
+    "environmental_dynamics": [151, 152, 154, 157, 158, 159, 160, 161, 590, 596],
+    "camera_presentation": [60, 61, 62, 66, 98, 99, 113, 169, 173, 420, 429, 439, 458, 491, 470],
+    "scene_completion": [4, 9, 10, 36, 57, 58, 65, 153, 162, 165, 180, 204, 230, 243, 625]
+  },
+  "output_order_source_lines": [
+    37, 38, 20, 29, 35, 151, 60, 4,
+    39, 72, 42, 43, 44, 152, 61, 9,
+    75, 78, 45, 115, 116, 154, 62, 10,
+    79, 80, 135, 142, 155, 157, 66, 36,
+    94, 117, 179, 201, 202, 158, 98, 57,
+    118, 119, 207, 213, 214, 159, 99, 58,
+    121, 122, 233, 234, 235, 160, 113, 65,
+    125, 126, 236, 237, 238, 161, 169, 153,
+    127, 145, 515, 517, 518, 590, 173, 162,
+    208, 605, 524, 525, 526, 596, 420, 165,
+    610, 528, 429, 180, 246, 531, 439, 204,
+    460, 534, 458, 230, 608, 577, 491, 243,
+    616, 578, 470, 625
+  ]
+}

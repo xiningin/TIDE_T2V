@@ -1,0 +1,11 @@
+metrics:
+  - visual_fidelity
+  - physical_commonsense
+  - text_video_alignment
+  - engagement
+penalties:
+  - sudden_appearances_disappearances
+  - unnatural_movement_speed
+  - unnatural_movement_direction
+  - unwanted_text_overlays
+  - unnecessary_scene_transitions
