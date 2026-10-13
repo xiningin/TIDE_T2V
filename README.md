@@ -84,54 +84,54 @@ prompt-optimization baseline, and our distilled TIDE Skill.
     <tr>
       <td align="center"><strong>Raw</strong></td>
       <td align="center" width="45%">
-        <a href="docs/assets/Raw_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
-          <img src="docs/assets/case_showcase/panda_raw.jpg" width="100%" alt="Three frames from the raw panda generation">
+        <a href="./docs/assets/Raw_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
+          <img src="./docs/assets/case_showcase/panda_raw.jpg" width="100%" alt="Three frames from the raw panda generation">
         </a>
         <br>
-        <a href="docs/assets/Raw_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
+        <a href="./docs/assets/Raw_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
       </td>
       <td align="center" width="45%">
-        <a href="docs/assets/Raw_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
-          <img src="docs/assets/case_showcase/bigfoot_raw.jpg" width="100%" alt="Three frames from the raw bigfoot generation">
+        <a href="./docs/assets/Raw_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
+          <img src="./docs/assets/case_showcase/bigfoot_raw.jpg" width="100%" alt="Three frames from the raw bigfoot generation">
         </a>
         <br>
-        <a href="docs/assets/Raw_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
+        <a href="./docs/assets/Raw_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
       </td>
     </tr>
     <tr>
       <td align="center"><strong>Baseline</strong></td>
       <td align="center" width="45%">
         <strong>VPO</strong><br>
-        <a href="docs/assets/VPO_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
-          <img src="docs/assets/case_showcase/panda_vpo.jpg" width="100%" alt="Three frames from the VPO panda generation">
+        <a href="./docs/assets/VPO_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
+          <img src="./docs/assets/case_showcase/panda_vpo.jpg" width="100%" alt="Three frames from the VPO panda generation">
         </a>
         <br>
-        <a href="docs/assets/VPO_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
+        <a href="./docs/assets/VPO_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
       </td>
       <td align="center" width="45%">
         <strong>Custom prompt</strong><br>
-        <a href="docs/assets/Custom_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
-          <img src="docs/assets/case_showcase/bigfoot_custom.jpg" width="100%" alt="Three frames from the custom-prompt bigfoot generation">
+        <a href="./docs/assets/Custom_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
+          <img src="./docs/assets/case_showcase/bigfoot_custom.jpg" width="100%" alt="Three frames from the custom-prompt bigfoot generation">
         </a>
         <br>
-        <a href="docs/assets/Custom_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
+        <a href="./docs/assets/Custom_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
       </td>
     </tr>
     <tr>
       <td align="center"><strong>Ours (TIDE)</strong></td>
       <td align="center" width="45%">
-        <a href="docs/assets/Ours_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
-          <img src="docs/assets/case_showcase/panda_tide.jpg" width="100%" alt="Three frames from the TIDE panda generation">
+        <a href="./docs/assets/Ours_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
+          <img src="./docs/assets/case_showcase/panda_tide.jpg" width="100%" alt="Three frames from the TIDE panda generation">
         </a>
         <br>
-        <a href="docs/assets/Ours_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
+        <a href="./docs/assets/Ours_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
       </td>
       <td align="center" width="45%">
-        <a href="docs/assets/Ours_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
-          <img src="docs/assets/case_showcase/bigfoot_tide.jpg" width="100%" alt="Three frames from the TIDE bigfoot generation">
+        <a href="./docs/assets/Ours_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
+          <img src="./docs/assets/case_showcase/bigfoot_tide.jpg" width="100%" alt="Three frames from the TIDE bigfoot generation">
         </a>
         <br>
-        <a href="docs/assets/Ours_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
+        <a href="./docs/assets/Ours_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
       </td>
     </tr>
   </tbody>
