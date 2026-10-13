@@ -67,6 +67,76 @@ The full, implementation-checked mechanism (per-rule FIFO scheduling, atomic
 `rules.json` updates, crash recovery, and the end-of-training `final_flush`) is
 documented in [`docs/METHOD.md`](docs/METHOD.md).
 
+## Qualitative case showcase
+
+The videos below compare generations from the raw prompt, a task-specific
+prompt-optimization baseline, and our distilled TIDE Skill.
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">Prompt</th>
+      <th align="center">A panda playing on a swing set.</th>
+      <th align="center">A bigfoot walking in the snowstorm.</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><strong>Raw</strong></td>
+      <td align="center" width="45%">
+        <a href="docs/assets/Raw_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
+          <img src="docs/assets/case_showcase/panda_raw.jpg" width="100%" alt="Three frames from the raw panda generation">
+        </a>
+        <br>
+        <a href="docs/assets/Raw_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
+      </td>
+      <td align="center" width="45%">
+        <a href="docs/assets/Raw_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
+          <img src="docs/assets/case_showcase/bigfoot_raw.jpg" width="100%" alt="Three frames from the raw bigfoot generation">
+        </a>
+        <br>
+        <a href="docs/assets/Raw_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Baseline</strong></td>
+      <td align="center" width="45%">
+        <strong>VPO</strong><br>
+        <a href="docs/assets/VPO_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
+          <img src="docs/assets/case_showcase/panda_vpo.jpg" width="100%" alt="Three frames from the VPO panda generation">
+        </a>
+        <br>
+        <a href="docs/assets/VPO_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
+      </td>
+      <td align="center" width="45%">
+        <strong>Custom prompt</strong><br>
+        <a href="docs/assets/Custom_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
+          <img src="docs/assets/case_showcase/bigfoot_custom.jpg" width="100%" alt="Three frames from the custom-prompt bigfoot generation">
+        </a>
+        <br>
+        <a href="docs/assets/Custom_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Ours (TIDE)</strong></td>
+      <td align="center" width="45%">
+        <a href="docs/assets/Ours_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">
+          <img src="docs/assets/case_showcase/panda_tide.jpg" width="100%" alt="Three frames from the TIDE panda generation">
+        </a>
+        <br>
+        <a href="docs/assets/Ours_A%20panda%20playing%20on%20a%20swing%20set-2.mp4">Open MP4</a>
+      </td>
+      <td align="center" width="45%">
+        <a href="docs/assets/Ours_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">
+          <img src="docs/assets/case_showcase/bigfoot_tide.jpg" width="100%" alt="Three frames from the TIDE bigfoot generation">
+        </a>
+        <br>
+        <a href="docs/assets/Ours_A%20bigfoot%20walking%20in%20the%20snowstorm.-0.mp4">Open MP4</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 ## Repository layout
 
 ```text
