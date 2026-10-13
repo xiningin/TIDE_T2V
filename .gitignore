@@ -16,7 +16,7 @@ api_keys/
 outputs/
 
 # Generated media and logs.
-*.mp4
+# *.mp4
 *.partial_started
 *.log
 *.lock
